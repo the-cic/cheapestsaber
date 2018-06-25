@@ -18,9 +18,9 @@ public class GameMain {
         targetSequence = new TargetSequence();
 
         targetSequence.addTarget(new Target(1.0, 0.25).setShape(-1, 1, 0).setOffset(-1, 0));
-        targetSequence.addTarget(new Target(1.0, 0.25).setShape( 1, 1, 0).setOffset( 1, 0));
+        targetSequence.addTarget(new Target(1.0, 0.25).setShape( 1, 1, 0).setOffset( 1, 1));
         targetSequence.addTarget(new Target(1.0, 0.25).setShape(-1, -1, 0).setOffset(-1, 0));
-        targetSequence.addTarget(new Target(2.0, 0.25).setShape(-1, 0, 1).setOffset(-1, 0));
+        targetSequence.addTarget(new Target(2.0, 0.25).setShape(-1, 0, 1).setOffset(-1, -1));
         targetSequence.addTarget(new Target(1.0, 0.25).setShape( 1, -1, 0).setOffset(-1, 0));
         targetSequence.addTarget(new Target(1.0, 0.25).setShape(-1, 0, -1).setOffset( 1, 0));
     }
