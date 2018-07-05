@@ -8,15 +8,26 @@ import java.util.List;
 /**
  * Created by mush on 25/06/2018.
  */
-public class TargetSequence {
+public class TargetSequence implements Target.ActivationDelegate {
+
+    public interface SequenceDelegate {
+        public void onSequenceFinished();
+        public void onBecameActive(Target target);
+        public void onStoppedActive(Target target);
+    }
 
     private List<Target> targetList;
     private double timePosition;
-    private int nextIndex;
+    private List<Target> window;
+    private int windowIndex;
+    private double windowDuration;
     private boolean finished;
+
+    public SequenceDelegate delegate;
 
     public TargetSequence() {
         targetList = new ArrayList<>();
+        window = new ArrayList<>();
         reset();
     }
 
@@ -28,28 +39,45 @@ public class TargetSequence {
             target.setTimeFrom(lastTarget.getStartTime());
         }
         targetList.add(target);
+        target.delegate = this;
     }
 
     public void reset() {
         Log.i("seq", "reset");
         timePosition = 0;
-        nextIndex = 0;
+        windowIndex = 0;
         finished = false;
+
+        for (Target target : targetList) {
+            target.reset();
+        }
+
+        makeWindow();
     }
 
     public void advance(double seconds) {
         timePosition += seconds;
 
-        Target nextTarget = getNextTarget(nextIndex);
+        Target nextTarget = getNextTarget(windowIndex);
         if (nextTarget == null) {
+            if (!finished) {
+                delegate.onSequenceFinished();
+            }
             finished = true;
         } else {
 
-            while (nextTarget != null && nextTarget.getEndTime() < timePosition) {
-                nextIndex++;
-                nextTarget = getNextTarget(nextIndex);
+            boolean changed = false;
+            while (nextTarget != null && nextTarget.getEndTime() < timePosition - 0.5) {
+                windowIndex++;
+                changed = true;
+                nextTarget = getNextTarget(windowIndex);
+            }
+            if (changed) {
+                makeWindow();
             }
         }
+
+        applyTimeToWindow();
     }
 
     private Target getNextTarget(int index) {
@@ -60,10 +88,15 @@ public class TargetSequence {
         }
     }
 
-    public List<Target> getWindow(double duration) {
-        List<Target> window = new ArrayList<>();
-        double endTime = timePosition + duration;
-        int index = nextIndex;
+    public void setWindowDuration(double windowDuration) {
+        this.windowDuration = windowDuration;
+        makeWindow();
+    }
+
+    public void makeWindow() {
+        window.clear();
+        double endTime = timePosition + windowDuration;
+        int index = windowIndex;
 
         Target nextTarget = getNextTarget(index);
         while (nextTarget != null && nextTarget.getStartTime() < endTime) {
@@ -71,14 +104,33 @@ public class TargetSequence {
             nextTarget = getNextTarget(index);
             index++;
         }
+    }
 
+    private void applyTimeToWindow(){
         for (Target target : window) {
             target.setCurrentTime(timePosition);
         }
+    }
+
+    public List<Target> getWindow() {
         return window;
     }
 
     public boolean isFinished() {
         return finished;
+    }
+
+    @Override
+    public void onBecameActive(Target target) {
+        if (delegate != null) {
+            delegate.onBecameActive(target);
+        }
+    }
+
+    @Override
+    public void onStoppedActive(Target target) {
+        if (delegate != null) {
+            delegate.onStoppedActive(target);
+        }
     }
 }

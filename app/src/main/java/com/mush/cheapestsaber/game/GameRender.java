@@ -33,7 +33,7 @@ public class GameRender {
 
     public GameRender() {
         targetHilightPaint = makeFillPaint(0xffffffff);
-        targetHilightPaint.setStrokeWidth(2);
+        targetHilightPaint.setStrokeWidth(3);
         targetStemPaint = makeFillPaint(0xff888888);
         targetPaint = makeFillPaint(0xffffff00);
         leftTargetPaint = makeFillPaint(0xffff0000);
@@ -48,13 +48,18 @@ public class GameRender {
         float bottom = playArea.height() * 0.9f;
         canvas.drawLine(0, bottom, playArea.width(), bottom, paint);
 
-        double windowDuration = 5.0;
-        List<Target> targetWindow = game.getTargetWindow(windowDuration);
+        double windowDuration = game.getTargetWindowDuration();
+        List<Target> targetWindow = game.getTargetWindow();
 
-        Collections.reverse(targetWindow);
-        for (Target target : targetWindow) {
-            drawTarget(canvas, target, windowDuration);
+        canvas.save();
+
+        canvas.translate(playArea.width() / 2, playArea.height() / 2);
+
+        for (int i = targetWindow.size() - 1; i >= 0; i--) {
+            drawTarget(canvas, targetWindow.get(i), windowDuration);
         }
+
+        canvas.restore();
 
         PointF leftPoint = game.getLeftPoint();
         PointF rightPoint = game.getRightPoint();
@@ -71,32 +76,41 @@ public class GameRender {
     }
 
     private void drawTarget(Canvas canvas, Target target, double windowDuration) {
-        float size = playArea.width() / 10;
+        float boxSize = playArea.width() / 10;
         float bottom = playArea.height() * 0.9f;
-        float halfSize = size * 0.5f;
+        float halfSize = boxSize * 0.5f;
 
-        float scale = (float) (bottom / windowDuration);
+        float x = target.xOffset * boxSize * 2;
+        float y = target.yOffset * boxSize * 2;
 
-        float x = playArea.width() * 0.5f + target.xOffset * size * 2;
-        float y = (float) (bottom - target.getCurrentTimeStartOffset() * scale);
-        float yOfs = (target.yOffset - 2) * size;
+        int saveCount = canvas.save();
 
-        canvas.drawRect(x - 5, (float) (y - target.getDuration() * scale), x + 5, y, targetStemPaint);
-        canvas.drawRect(x - 1, y + yOfs, x + 0, y, targetStemPaint);
+        double percent = target.getCurrentTimeStartOffset() / windowDuration;
+        float scale = (float) (1  / (1 + percent*2));
 
-        drawTargetBox(canvas, target, x, y + yOfs - halfSize, size);
+        canvas.scale(scale, scale);
+        canvas.translate(0, (float) (-percent * boxSize * 10));
+
+        canvas.drawOval(x-5, y-5, x + 5, y+5, targetStemPaint);
+
+        canvas.drawOval(x - 5, boxSize * 5 - 2, x + 5, boxSize * 5 + 2, targetStemPaint);
+        canvas.drawLine(x, boxSize * 5, x, y, targetStemPaint);
+        drawTargetBox(canvas, target, x, y, boxSize);
+
+        canvas.restoreToCount(saveCount);
     }
 
     private void drawTargetBox(Canvas canvas, Target target, float x, float y, float size) {
         Paint paint = targetPaint;
         if (target.side < 0) {
-            paint = target.isCurrentGoal() ? leftObjectTargetPaint : leftTargetPaint;
+            paint = target.isActive() ? leftObjectTargetPaint : leftTargetPaint;
         } else if (target.side > 0) {
-            paint = target.isCurrentGoal() ? rightObjectTargetPaint : rightTargetPaint;
+            paint = target.isActive() ? rightObjectTargetPaint : rightTargetPaint;
         }
 
         float halfSize = size / 2;
         float margin = 0.8f;
+
         canvas.drawRect(x - halfSize, y - halfSize, x + halfSize, y + halfSize, paint);
 
         if (target.horizontal != 0) {

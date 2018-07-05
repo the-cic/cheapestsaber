@@ -5,23 +5,37 @@ package com.mush.cheapestsaber.game;
  */
 public class Target {
 
+    public interface ActivationDelegate {
+        public void onBecameActive(Target target);
+        public void onStoppedActive(Target target);
+    }
+
     private double delayTime;
     private double startTime;
     private double duration;
     private double endTime;
     private double currentTimeStartOffset;
-    private boolean currentGoal;
+    private boolean active;
+    private boolean wasActive;
 
     public int side;
     public int horizontal;
     public int vertical;
     public int xOffset;
     public int yOffset;
+    public ActivationDelegate delegate;
 
     public Target(double delayTime, double duration) {
         this.delayTime = delayTime;
         this.duration = duration;
         setTimeFrom(0);
+        reset();
+    }
+
+    public void reset() {
+        this.active = false;
+        this.wasActive = false;
+        setCurrentTime(0);
     }
 
     public Target setShape(int side, int horizontal, int vertical) {
@@ -44,7 +58,15 @@ public class Target {
 
     public void setCurrentTime(double currentTime) {
         currentTimeStartOffset = startTime - currentTime;
-        currentGoal = startTime < currentTime && endTime > currentTime;
+        active = startTime < currentTime && endTime > currentTime;
+        if (active != wasActive && delegate != null) {
+            if (active) {
+                delegate.onBecameActive(this);
+            } else {
+                delegate.onStoppedActive(this);
+            }
+        }
+        wasActive = active;
     }
 
     public double getEndTime() {
@@ -63,7 +85,7 @@ public class Target {
         return currentTimeStartOffset;
     }
 
-    public boolean isCurrentGoal() {
-        return currentGoal;
+    public boolean isActive() {
+        return active;
     }
 }

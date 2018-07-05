@@ -61,8 +61,10 @@ public class GameInput {
         }
 
         if (isLeftNotRight) {
+            point.x = point.x * 2 + 1;
             leftPointValid = pressed;
         } else {
+            point.x = point.x * 2 - 1;
             rightPointValid = pressed;
         }
     }
