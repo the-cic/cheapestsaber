@@ -7,8 +7,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.mush.cheapestsaber.game.GameInput;
-import com.mush.cheapestsaber.game.GameMain;
 import com.mush.cheapestsaber.game.GameRender;
 
 /**
@@ -18,8 +16,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final long SECOND_IN_NANOS = 1000000000;
 
-    private GameInput input;
-    private GameMain game;
+    private MainContent content;
     private GameRender render;
     private long lastUpdateStartNanos;
 
@@ -32,8 +29,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         postInvalidate();
         setWillNotDraw(false);
 
-        input = new GameInput();
-        game = new GameMain();
+        content = MainContent.get();
         render = new GameRender();
     }
 
@@ -46,7 +42,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         getSecondsSinceLastUpdate();
 
         render.resize(getWidth(), getHeight());
-        input.resize(render.getInputArea());
+        content.getInput().resize(render.getInputArea());
 
         invalidate();
     }
@@ -56,7 +52,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         Log.i("view", "changed");
 
         render.resize(width, height);
-        input.resize(render.getInputArea());
+        content.getInput().resize(render.getInputArea());
     }
 
     @Override
@@ -66,7 +62,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        input.onTouchEvent(event);
+        content.getInput().onTouchEvent(event);
         super.onTouchEvent(event);
         return true;
     }
@@ -75,10 +71,10 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        game.processInput(input);
+        content.getGame().processInput(content.getInput());
         double secondsPerFrame = getSecondsSinceLastUpdate();
-        game.update(secondsPerFrame);
-        render.draw(canvas, game);
+        content.getGame().update(secondsPerFrame);
+        render.draw(canvas, content.getGame());
         render.drawFps(canvas, secondsPerFrame);
 
         invalidate();
