@@ -2,6 +2,7 @@ package com.mush.cheapestsaber.game;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
@@ -65,14 +66,45 @@ public class GameRender {
         PointF rightPoint = game.getRightPoint();
 
         if (leftPoint != null) {
-            paint.setColor(0xffff0000);
-            canvas.drawCircle((float) (screenWidth * (0.5 + leftPoint.x /2)), (float) (screenWidth * (0.5 + leftPoint.y / 2)), 50, paint);
+            paint.setColor(0x5fff0000);
+            canvas.drawCircle((float) (screenWidth * (0.5 + leftPoint.x /2)), (float) (screenWidth * (0.5 + leftPoint.y / 2)), 2.5f, paint);
         }
 
         if (rightPoint != null) {
-            paint.setColor(0xff0000ff);
-            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 50, paint);
+            paint.setColor(0x5f0000ff);
+            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 2.5f, paint);
         }
+
+        paint.setStyle(Paint.Style.STROKE);
+
+        paint.setColor(0xffff0000);
+        drawTool(canvas, game.getLeftTool(), paint);
+
+        paint.setColor(0xff0000ff);
+        drawTool(canvas, game.getRightTool(), paint);
+    }
+
+    private void drawTool(Canvas canvas, Tool tool, Paint paint) {
+        PointF position = tool.getPosition();
+        PointF delayed = tool.getDelayedPosition();
+        PointF start = tool.getStartPoint();
+        Point direction = tool.getDirection();
+
+        float pX = (float) (screenWidth * (0.5 + position.x /2));
+        float pY = (float) (screenWidth * (0.5 + position.y / 2));
+
+        float dpX = (float) (screenWidth * (0.5 + delayed.x /2));
+        float dpY = (float) (screenWidth * (0.5 + delayed.y / 2));
+
+        float sX = (float) (screenWidth * (0.5 + start.x /2));
+        float sY = (float) (screenWidth * (0.5 + start.y / 2));
+
+        canvas.drawCircle(pX, pY, 10, paint);
+        canvas.drawRect(dpX - 10, dpY - 10, dpX + 10, dpY + 10, paint);
+        canvas.drawLine(dpX, dpY, pX, pY, paint);
+        canvas.drawRect(sX - 10, sY - 10, sX + 10, sY + 10, paint);
+
+        canvas.drawLine(pX, pY, pX + direction.x * 100, pY + direction.y *100, paint);
     }
 
     private void drawTarget(Canvas canvas, Target target, double windowDuration) {

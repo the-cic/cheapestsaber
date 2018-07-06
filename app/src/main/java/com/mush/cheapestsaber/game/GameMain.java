@@ -12,6 +12,8 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     private PointF leftPoint;
     private PointF rightPoint;
+    private Tool leftTool;
+    private Tool rightTool;
     private TargetSequence targetSequence;
     private double targetWindowDuration = 5.0;
 
@@ -20,6 +22,13 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         targetSequence.delegate = this;
         targetSequence.setWindowDuration(targetWindowDuration);
 
+        createSequence();
+
+        leftTool = new Tool();
+        rightTool = new Tool();
+    }
+
+    private void createSequence() {
         targetSequence.addTarget(new Target(1.0, 0.25).setShape(-1, 1, 0).setOffset(-1, 0));
         targetSequence.addTarget(new Target(1.0, 0.25).setShape( 1, 1, 0).setOffset( 1, 1));
         targetSequence.addTarget(new Target(1.0, 0.25).setShape(-1, -1, 0).setOffset(-1, 0));
@@ -28,9 +37,11 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         targetSequence.addTarget(new Target(1.0, 0.25).setShape(-1, 0, -1).setOffset( 1, 0));
     }
 
-    public void processInput(GameInput input) {
+    public void processInput(GameInput input, double secondsPerFrame) {
         leftPoint = input.getLeftPoint();
         rightPoint = input.getRightPoint();
+        leftTool.update(leftPoint, secondsPerFrame);
+        rightTool.update(rightPoint, secondsPerFrame);
     }
 
     public void update(double secondsPerFrame) {
@@ -46,6 +57,14 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     public PointF getRightPoint() {
         return rightPoint;
+    }
+
+    public Tool getLeftTool() {
+        return leftTool;
+    }
+
+    public Tool getRightTool() {
+        return rightTool;
     }
 
     public double getTargetWindowDuration() {

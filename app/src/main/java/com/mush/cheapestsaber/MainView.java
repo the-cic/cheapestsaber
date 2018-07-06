@@ -67,13 +67,19 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         return true;
     }
 
+    private void update(double secondsPerFrame) {
+        content.getGame().processInput(content.getInput(), secondsPerFrame);
+        content.getGame().update(secondsPerFrame);
+    }
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        content.getGame().processInput(content.getInput());
         double secondsPerFrame = getSecondsSinceLastUpdate();
-        content.getGame().update(secondsPerFrame);
+
+        update(secondsPerFrame);
+
         render.draw(canvas, content.getGame());
         render.drawFps(canvas, secondsPerFrame);
 
