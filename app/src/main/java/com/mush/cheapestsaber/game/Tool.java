@@ -3,8 +3,6 @@ package com.mush.cheapestsaber.game;
 import android.graphics.Point;
 import android.graphics.PointF;
 
-import com.mush.cheapestsaber.MainContent;
-
 /**
  * Created by mush on 06/07/2018.
  */
@@ -26,13 +24,6 @@ public class Tool {
         active = false;
     }
 
-    public void resetTo(PointF point) {
-        if (point != null) {
-            position.set(point);
-            delayedPosition.set(point);
-        }
-    }
-
     public void update(PointF point, double seconds) {
         if (point != null) {
             updatePosition(point);
@@ -40,7 +31,8 @@ public class Tool {
 
             if (!active) {
                 active = true;
-                resetTo(point);
+//                resetPosition(point);
+                delayedPosition.set(point);
             }
         } else {
             active = false;
@@ -60,8 +52,16 @@ public class Tool {
         delayedPosition.offset(dx, dy);
     }
 
-    public void resetStart() {
+//    private void resetPosition(PointF point) {
+//        if (point != null) {
+//            position.set(point);
+//            delayedPosition.set(point);
+//        }
+//    }
+
+    public void resetStartPoint() {
         startPoint.set(position);
+        direction.set(0, 0);
     }
 
     private void updatePosition(PointF point) {
@@ -80,7 +80,7 @@ public class Tool {
         position.set(point);
     }
 
-    public void updateDirection() {
+    private void updateDirection() {
         float dx = position.x - startPoint.x;
         float dy = position.y - startPoint.y;
         double d = Math.sqrt(dx * dx + dy * dy);

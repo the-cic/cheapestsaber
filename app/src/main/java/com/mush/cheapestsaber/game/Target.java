@@ -1,5 +1,7 @@
 package com.mush.cheapestsaber.game;
 
+import android.graphics.Point;
+
 /**
  * Created by mush on 25/06/2018.
  */
@@ -10,6 +12,9 @@ public class Target {
         public void onStoppedActive(Target target);
     }
 
+    public final static int SIDE_LEFT = -1;
+    public final static int SIDE_RIGHT = 1;
+
     private double delayTime;
     private double startTime;
     private double duration;
@@ -17,10 +22,12 @@ public class Target {
     private double currentTimeStartOffset;
     private boolean active;
     private boolean wasActive;
+    private boolean hit;
 
-    public int side;
-    public int horizontal;
-    public int vertical;
+    private int side;
+//    public int horizontalDirection;
+//    public int verticalDirection;
+    private Point direction;
     public int xOffset;
     public int yOffset;
     public ActivationDelegate delegate;
@@ -35,13 +42,15 @@ public class Target {
     public void reset() {
         this.active = false;
         this.wasActive = false;
+        this.hit = false;
         setCurrentTime(0);
     }
 
     public Target setShape(int side, int horizontal, int vertical) {
         this.side = side;
-        this.horizontal = horizontal;
-        this.vertical = vertical;
+//        this.horizontalDirection = horizontal;
+//        this.verticalDirection = vertical;
+        this.direction = new Point(horizontal, vertical);
         return this;
     }
 
@@ -87,5 +96,22 @@ public class Target {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setHit() {
+        active = false;
+        hit = true;
+    }
+
+    public Point getDirection() {
+        return direction;
+    }
+
+    public int getSide() {
+        return side;
+    }
+
+    public boolean isHit() {
+        return hit;
     }
 }
