@@ -56,8 +56,8 @@ public class GameRender {
     public void draw(Canvas canvas, GameMain game) {
         Paint paint = makeFillPaint(0xffffffff);
 
-        float bottom = playArea.height() * 0.9f;
-        canvas.drawLine(0, bottom, playArea.width(), bottom, paint);
+        canvas.drawLine(0, inputArea.top, inputArea.width(), inputArea.top, paint);
+        canvas.drawLine(inputArea.width() * 0.5f, inputArea.top, inputArea.width() * 0.5f, inputArea.bottom, paint);
 
         double windowDuration = game.getTargetWindowDuration();
         List<SequenceItem> targetWindow = game.getTargetWindow();
