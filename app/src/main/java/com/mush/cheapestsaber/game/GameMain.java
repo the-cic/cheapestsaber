@@ -1,8 +1,12 @@
 package com.mush.cheapestsaber.game;
 
+import android.app.Application;
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
+
+import com.mush.cheapestsaber.R;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,6 +17,8 @@ import java.util.Set;
  * Created by mush on 25/06/2018.
  */
 public class GameMain implements TargetSequence.SequenceDelegate {
+
+    private Context applicationContext;
 
     private PointF leftPoint;
     private PointF rightPoint;
@@ -26,7 +32,9 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     private int hitCount;
     private int totalCount;
 
-    public GameMain() {
+    public GameMain(Context appContext) {
+        applicationContext = appContext;
+
         targetSequence = new TargetSequence();
         targetSequence.delegate = this;
         targetSequence.setWindowDuration(targetWindowDuration);
@@ -39,12 +47,14 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     }
 
     private void createSequence() {
+        SequenceLoader loader = new SequenceLoader(applicationContext, R.raw.sequence1);
+
         targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, 0));
-        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 1, 0).setOffset( 1, 1));
+        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 1, 1).setOffset( 1, 1));
         targetSequence.addItem(new SequenceSound(0.5).setText("text1"));
         targetSequence.addItem(new Target(0.5, 0.25).setShape(Target.SIDE_LEFT, -1, 0).setOffset(-1, 0));
         targetSequence.addItem(new Target(2.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, -1));
-        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, -1, 0).setOffset(-1, 0));
+        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 0, 1).setOffset(-1, 0));
         targetSequence.addItem(new SequenceSound(0.5).setText("text2"));
         targetSequence.addItem(new SequenceSound(0.0).setText("text3"));
         targetSequence.addItem(new Target(0.5, 0.25).setShape(Target.SIDE_LEFT, 0, -1).setOffset( 1, 0));

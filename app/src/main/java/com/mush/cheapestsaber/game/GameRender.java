@@ -2,6 +2,7 @@ package com.mush.cheapestsaber.game;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -34,6 +35,7 @@ public class GameRender {
     private Paint hitObjectTargetPaint;
     private Paint targetPaint;
     private Paint targetDestinationPaint;
+    private Path targetArrowPath;
 
     public GameRender() {
         scorePaint = makeFillPaint(0xffffffff);
@@ -51,6 +53,8 @@ public class GameRender {
         Typeface fpsTypeface = Typeface.create("sans-serif", Typeface.BOLD);
         scorePaint.setTextSize(20);
         scorePaint.setTypeface(fpsTypeface);
+
+        makeTargetArrowPath(100);
     }
 
     public void draw(Canvas canvas, GameMain game) {
@@ -123,8 +127,12 @@ public class GameRender {
         canvas.drawLine(pX, pY, pX + direction.x * 100, pY + direction.y *100, paint);
     }
 
+    private float getBoxSize() {
+        return playArea.width() / 10;
+    }
+
     private void drawTarget(Canvas canvas, Target target, double windowDuration) {
-        float boxSize = playArea.width() / 10;
+        float boxSize = getBoxSize();
 
         float x = target.xOffset * boxSize * 2;
         float y = target.yOffset * boxSize * 2;
@@ -137,12 +145,42 @@ public class GameRender {
         canvas.scale(scale, scale);
         canvas.translate(0, (float) (-percent * boxSize * 10));
 
-        drawTargetBox(canvas, target, x, y, boxSize, percent);
+        canvas.translate(x, y);
+
+        float rotation = getRotationForDirection(target.getDirection());
+
+        if (rotation != 0) {
+            canvas.rotate(-rotation * 180);
+        }
+
+        drawTargetBox(canvas, target, boxSize, percent);
 
         canvas.restoreToCount(saveCount);
     }
 
-    private void drawTargetBox(Canvas canvas, Target target, float x, float y, float size, double percent) {
+    private float getRotationForDirection(Point direction) {
+        /*
+                   0,-1
+        -1,-1 0.75 0.50 0.25 1,-1
+        -1, 0 1.00   .  0.00 1,0
+        -1, 1 1.25 1.50 1.75 1, 1
+                   0, 1
+        */
+        float rot = 0;
+        if (direction != null) {
+            if (direction.x == 1) {
+                rot = 2 - direction.y * 0.25f;
+                rot = rot % 2;
+            } else if (direction.x == -1) {
+                rot = 1 + direction.y * 0.25f;
+            } else if (direction.y != 0) {
+                rot = 1 + direction.y * 0.50f;
+            }
+        }
+        return rot;
+    }
+
+    private void drawTargetBox(Canvas canvas, Target target, float size, double percent) {
         Paint paint = targetPaint;
         if (target.isHit()) {
             paint.setColor(hitObjectTargetPaint.getColor());
@@ -156,22 +194,15 @@ public class GameRender {
         float halfSize = size / 2;
         float margin = 0.8f;
 
-        canvas.drawRect(x - halfSize, y - halfSize, x + halfSize, y + halfSize, paint);
+        canvas.drawRect(- halfSize, - halfSize, + halfSize, + halfSize, paint);
 
         Point direction = target.getDirection();
 
         if (direction != null) {
-            if (direction.x != 0) {
-                float hx = x - halfSize * direction.x * margin;
-                canvas.drawLine(hx, y - halfSize * margin, hx, y + halfSize * margin, targetHilightPaint);
-            }
-
-            if (direction.y != 0) {
-                float vy = y - halfSize * direction.y * margin;
-                canvas.drawLine(x - halfSize * margin, vy, x + halfSize * margin, vy, targetHilightPaint);
-            }
+            canvas.drawPath(targetArrowPath, targetHilightPaint);
         }
 
+        // Anticipation hint
         percent = 1 - percent;
         final double minPercent = 0.8;
         if (percent < minPercent || percent > 1) {
@@ -189,10 +220,22 @@ public class GameRender {
         paint.setStrokeWidth(2);
 
         canvas.drawRect(
-                x - halfSize - halfSize * iShowPercent * 2,
-                y - halfSize - halfSize * iShowPercent * 2,
-                x + halfSize + halfSize * iShowPercent * 2,
-                y + halfSize + halfSize * iShowPercent * 2, paint);
+                - halfSize - halfSize * iShowPercent * 2,
+                - halfSize - halfSize * iShowPercent * 2,
+                + halfSize + halfSize * iShowPercent * 2,
+                + halfSize + halfSize * iShowPercent * 2, paint);
+    }
+
+    private void makeTargetArrowPath(float size){
+        float halfSize = size / 2;
+        float margin = 0.8f;
+
+        Path path = new Path();
+        path.moveTo(- halfSize * margin, - halfSize * margin);
+        path.lineTo(- halfSize * margin, + halfSize * margin);
+        path.lineTo(0, 0);
+        path.lineTo(- halfSize * margin, - halfSize * margin);
+        targetArrowPath = path;
     }
 
     public void resize(int width, int height) {
@@ -201,6 +244,8 @@ public class GameRender {
         // 2 x 1 box at the bottom
         inputArea = new RectF(0, height - width / 2, width, height);
         playArea = new RectF(0, 0, width, inputArea.top);
+
+        makeTargetArrowPath(getBoxSize());
     }
 
     public RectF getInputArea() {

@@ -29,7 +29,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         postInvalidate();
         setWillNotDraw(false);
 
-        content = MainContent.get();
+        content = MainContent.get(context.getApplicationContext());
         render = new GameRender();
     }
 

@@ -1,5 +1,7 @@
 package com.mush.cheapestsaber;
 
+import android.content.Context;
+
 import com.mush.cheapestsaber.game.GameInput;
 import com.mush.cheapestsaber.game.GameMain;
 
@@ -10,19 +12,21 @@ public class MainContent {
 
     private GameInput input;
     private GameMain game;
+    private Context applicationContext;
 
     private static MainContent instance;
 
-    public static MainContent get() {
+    public static MainContent get(Context appContext) {
         if (instance == null) {
-            instance = new MainContent();
+            instance = new MainContent(appContext);
         }
         return instance;
     }
 
-    private MainContent() {
+    private MainContent(Context appContext) {
+        this.applicationContext = appContext;
         input = new GameInput();
-        game = new GameMain();
+        game = new GameMain(appContext);
     }
 
     public GameInput getInput() {
