@@ -60,14 +60,17 @@ public class GameRender {
         canvas.drawLine(0, bottom, playArea.width(), bottom, paint);
 
         double windowDuration = game.getTargetWindowDuration();
-        List<Target> targetWindow = game.getTargetWindow();
+        List<SequenceItem> targetWindow = game.getTargetWindow();
 
         canvas.save();
 
         canvas.translate(playArea.width() / 2, playArea.height() / 2);
 
         for (int i = targetWindow.size() - 1; i >= 0; i--) {
-            drawTarget(canvas, targetWindow.get(i), windowDuration);
+            SequenceItem item = targetWindow.get(i);
+            if (item instanceof Target) {
+                drawTarget(canvas, (Target) item, windowDuration);
+            }
         }
 
         canvas.restore();

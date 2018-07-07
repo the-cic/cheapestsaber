@@ -8,17 +8,19 @@ import java.util.List;
 /**
  * Created by mush on 25/06/2018.
  */
-public class TargetSequence implements Target.ActivationDelegate {
+public class TargetSequence implements SequenceItem.ActivationDelegate {
 
     public interface SequenceDelegate {
         public void onSequenceFinished();
+
         public void onBecameActive(Target target);
+
         public void onStoppedActive(Target target);
     }
 
-    private List<Target> targetList;
+    private List<SequenceItem> itemList;
     private double timePosition;
-    private List<Target> window;
+    private List<SequenceItem> targetWindow;
     private int windowIndex;
     private double windowDuration;
     private boolean finished;
@@ -26,20 +28,20 @@ public class TargetSequence implements Target.ActivationDelegate {
     public SequenceDelegate delegate;
 
     public TargetSequence() {
-        targetList = new ArrayList<>();
-        window = new ArrayList<>();
+        itemList = new ArrayList<>();
+        targetWindow = new ArrayList<>();
         reset();
     }
 
-    public void addTarget(Target target) {
-        Target lastTarget = getNextTarget(targetList.size() - 1);
-        if (lastTarget == null) {
-            target.setTimeFrom(0);
+    public void addItem(SequenceItem item) {
+        SequenceItem lastItem = getNextItem(itemList.size() - 1);
+        if (lastItem == null) {
+            item.setTimeFrom(0);
         } else {
-            target.setTimeFrom(lastTarget.getStartTime());
+            item.setTimeFrom(lastItem.getStartTime());
         }
-        targetList.add(target);
-        target.delegate = this;
+        itemList.add(item);
+        item.delegate = this;
     }
 
     public void reset() {
@@ -48,41 +50,56 @@ public class TargetSequence implements Target.ActivationDelegate {
         windowIndex = 0;
         finished = false;
 
-        for (Target target : targetList) {
-            target.reset();
+        for (SequenceItem item : itemList) {
+            item.reset();
         }
 
-        makeWindow();
+        makeTargetWindow();
     }
 
     public void advance(double seconds) {
         timePosition += seconds;
 
-        Target nextTarget = getNextTarget(windowIndex);
-        if (nextTarget == null) {
+        SequenceItem nextItem = getNextItem(windowIndex);
+        if (nextItem == null) {
             if (!finished) {
                 delegate.onSequenceFinished();
             }
             finished = true;
         } else {
-
-            boolean changed = false;
-            while (nextTarget != null && nextTarget.getEndTime() < timePosition - 0.5) {
-                windowIndex++;
-                changed = true;
-                nextTarget = getNextTarget(windowIndex);
-            }
-            if (changed) {
-                makeWindow();
+            if (advanceWindowIndex(nextItem)) {
+                makeTargetWindow();
             }
         }
 
         applyTimeToWindow();
     }
 
-    private Target getNextTarget(int index) {
-        if (index >= 0 && targetList.size() > index) {
-            return targetList.get(index);
+    private boolean advanceWindowIndex(SequenceItem firstItem) {
+        SequenceItem nextItem = firstItem;
+        boolean changed = false;
+        while (nextItem != null && isItemTooOldForWindow(nextItem)) {
+            windowIndex++;
+            changed = true;
+            nextItem = getNextItem(windowIndex);
+        }
+        return changed;
+    }
+
+    private boolean isItemTooOldForWindow(SequenceItem item) {
+        if (item instanceof Target) {
+            Target target = (Target) item;
+            // stay .5 more seconds in window
+            return target.getEndTime() < timePosition - 0.5;
+        } else {
+            // no duration, also no need to keep in window
+            return item.getStartTime() < timePosition;
+        }
+    }
+
+    private SequenceItem getNextItem(int index) {
+        if (index >= 0 && itemList.size() > index) {
+            return itemList.get(index);
         } else {
             return null;
         }
@@ -90,30 +107,30 @@ public class TargetSequence implements Target.ActivationDelegate {
 
     public void setWindowDuration(double windowDuration) {
         this.windowDuration = windowDuration;
-        makeWindow();
+        makeTargetWindow();
     }
 
-    public void makeWindow() {
-        window.clear();
+    public void makeTargetWindow() {
+        targetWindow.clear();
         double endTime = timePosition + windowDuration;
         int index = windowIndex;
 
-        Target nextTarget = getNextTarget(index);
-        while (nextTarget != null && nextTarget.getStartTime() < endTime) {
-            window.add(nextTarget);
-            nextTarget = getNextTarget(index);
+        SequenceItem nextItem = getNextItem(index);
+        while (nextItem != null && nextItem.getStartTime() < endTime) {
+            targetWindow.add(nextItem);
+            nextItem = getNextItem(index);
             index++;
         }
     }
 
-    private void applyTimeToWindow(){
-        for (Target target : window) {
+    private void applyTimeToWindow() {
+        for (SequenceItem target : targetWindow) {
             target.setCurrentTime(timePosition);
         }
     }
 
-    public List<Target> getWindow() {
-        return window;
+    public List<SequenceItem> getTargetWindow() {
+        return targetWindow;
     }
 
     public boolean isFinished() {
@@ -121,16 +138,18 @@ public class TargetSequence implements Target.ActivationDelegate {
     }
 
     @Override
-    public void onBecameActive(Target target) {
-        if (delegate != null) {
-            delegate.onBecameActive(target);
+    public void onBecameActive(SequenceItem item) {
+        if (item instanceof Target && delegate != null) {
+            delegate.onBecameActive((Target) item);
+        } else if (item instanceof SequenceSound) {
+            Log.i("seq", "sound: " + ((SequenceSound) item).getText());
         }
     }
 
     @Override
-    public void onStoppedActive(Target target) {
-        if (delegate != null) {
-            delegate.onStoppedActive(target);
+    public void onStoppedActive(SequenceItem item) {
+        if (item instanceof Target && delegate != null) {
+            delegate.onStoppedActive((Target) item);
         }
     }
 }

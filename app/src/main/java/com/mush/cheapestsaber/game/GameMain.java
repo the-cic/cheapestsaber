@@ -39,12 +39,15 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     }
 
     private void createSequence() {
-        targetSequence.addTarget(new Target(1.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, 0));
-        targetSequence.addTarget(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 1, 0).setOffset( 1, 1));
-        targetSequence.addTarget(new Target(1.0, 0.25).setShape(Target.SIDE_LEFT, -1, 0).setOffset(-1, 0));
-        targetSequence.addTarget(new Target(2.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, -1));
-        targetSequence.addTarget(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, -1, 0).setOffset(-1, 0));
-        targetSequence.addTarget(new Target(1.0, 0.25).setShape(Target.SIDE_LEFT, 0, -1).setOffset( 1, 0));
+        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, 0));
+        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 1, 0).setOffset( 1, 1));
+        targetSequence.addItem(new SequenceSound(0.5).setText("text1"));
+        targetSequence.addItem(new Target(0.5, 0.25).setShape(Target.SIDE_LEFT, -1, 0).setOffset(-1, 0));
+        targetSequence.addItem(new Target(2.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, -1));
+        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, -1, 0).setOffset(-1, 0));
+        targetSequence.addItem(new SequenceSound(0.5).setText("text2"));
+        targetSequence.addItem(new SequenceSound(0.0).setText("text3"));
+        targetSequence.addItem(new Target(0.5, 0.25).setShape(Target.SIDE_LEFT, 0, -1).setOffset( 1, 0));
     }
 
     public void processInput(GameInput input, double secondsPerFrame) {
@@ -93,8 +96,8 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         return targetWindowDuration;
     }
 
-    public List<Target> getTargetWindow() {
-        return targetSequence.getWindow();
+    public List<SequenceItem> getTargetWindow() {
+        return targetSequence.getTargetWindow();
     }
 
     public int getTotalCount() {
