@@ -16,17 +16,15 @@ import java.util.Map;
  */
 public class SoundPlayer implements MediaPlayer.OnCompletionListener {
 
-    private List<MediaPlayer> channels;
-
     private Map<String, Integer> soundMap;
+    private Map<String, List<MediaPlayer>> voiceMap;
 
     private Context applicationContext;
 
     public SoundPlayer(Context appContext) {
         this.applicationContext = appContext;
 
-        channels = new ArrayList<>();
-        channels.add(new MediaPlayer());
+        voiceMap = new HashMap<>();
 
         soundMap = new HashMap<>();
         soundMap.put("Drum1", R.raw.drum1);
@@ -36,41 +34,62 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void play(String soundName) {
-        if (channels.size() >= 6) {
-            Log.i("sound", "too many channels");
-            return;
-        }
+//        Log.i("sound", "play " + soundName);
         Integer resId = soundMap.get(soundName);
         if (resId != null) {
-//            Log.i("sound", "play: " + soundName);
-            new Thread(new SoundPlayerThread(this, resId)).start();
-//            MediaPlayer mp = MediaPlayer.create(applicationContext, resId);
-//            channels.add(mp);
-//            mp.setOnCompletionListener(this);
-//            mp.start();
+            new Thread(new SoundPlayerThread(this, soundName)).start();
         }
     }
 
-    public void startMediaPlayerForResource(int resId) {
-        MediaPlayer mp = MediaPlayer.create(applicationContext, resId);
-        channels.add(mp);
-        mp.setOnCompletionListener(this);
-        mp.start();
+    public MediaPlayer getMediaPlayerForSound(String name) {
+        Integer resId = soundMap.get(name);
+        if (resId == null) {
+            return null;
+        }
+        List<MediaPlayer> list = voiceMap.get(name);
+        if (list == null) {
+            list = new ArrayList<>();
+            voiceMap.put(name, list);
+        }
+        MediaPlayer mp = null;
+        for (MediaPlayer aMp : list) {
+            if (!aMp.isPlaying()) {
+                mp = aMp;
+                break;
+            }
+        }
+        if (mp == null && list.size() > 4) {
+            Log.i("sound", "too many channels");
+            return null;
+        }
+        if (mp == null) {
+            Log.i("sound", "creating new MP for " + name);
+            mp = MediaPlayer.create(applicationContext, resId);
+            mp.setOnCompletionListener(this);
+            list.add(mp);
+        }
+        return mp;
+    }
+
+    public void startMediaPlayerForSound(String soundName) {
+        MediaPlayer mp = getMediaPlayerForSound(soundName);
+        if (mp != null) {
+            mp.start();
+        }
     }
 
     public void release() {
-        for (MediaPlayer mp : channels) {
-            mp.stop();
-            mp.reset();
-            mp.release();
+        for (List<MediaPlayer> list : voiceMap.values()) {
+            for (MediaPlayer mp : list) {
+                mp.stop();
+                mp.reset();
+                mp.release();
+            }
         }
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
         //Log.i("sound", "completed: ");
-        mp.reset();
-        mp.release();
-        channels.remove(mp);
     }
 }

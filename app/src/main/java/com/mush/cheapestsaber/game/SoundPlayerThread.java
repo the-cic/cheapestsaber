@@ -8,15 +8,15 @@ import android.media.MediaPlayer;
 public class SoundPlayerThread implements Runnable {
 
     private SoundPlayer soundPlayer;
-    private int resId;
+    private String soundName;
 
-    public SoundPlayerThread(SoundPlayer player, int resId) {
+    public SoundPlayerThread(SoundPlayer player, String name) {
         this.soundPlayer = player;
-        this.resId = resId;
+        this.soundName = name;
     }
 
     @Override
     public void run() {
-        soundPlayer.startMediaPlayerForResource(resId);
+        soundPlayer.startMediaPlayerForSound(soundName);
     }
 }

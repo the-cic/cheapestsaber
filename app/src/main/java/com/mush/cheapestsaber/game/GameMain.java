@@ -29,7 +29,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     private Tool leftTool;
     private Tool rightTool;
     private TargetSequence targetSequence;
-    private double targetWindowDuration = 5.0;
+    private double targetWindowDuration = 2.0;
     private Set<Target> activeTargets;
 
     private int comboLength;
@@ -58,20 +58,6 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         SequenceLoader loader = new SequenceLoader(applicationContext, R.raw.sequence2);
 
         loader.parseInto(targetSequence);
-
-        /*
-        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, 0));
-        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 1, 1).setOffset( 1, 1));
-        targetSequence.addItem(new SequenceSound(0.5).setText("text1"));
-        targetSequence.addItem(new Target(0.5, 0.25).setShape(Target.SIDE_LEFT, -1, 0).setOffset(-1, 0));
-        targetSequence.addItem(new Target(2.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, -1));
-        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 0, 1).setOffset(-1, 0));
-        targetSequence.addItem(new SequenceSound(0.5).setText("text2"));
-        targetSequence.addItem(new SequenceSound(0.0).setText("text3"));
-        targetSequence.addItem(new Target(0.5, 0.25).setShape(Target.SIDE_LEFT, 0, -1).setOffset( 1, 0));
-        targetSequence.addItem(new Target(2.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(0, 0));
-        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 0, 1).setOffset(0, 0));
-        */
     }
 
     public void processInput(GameInput input, double secondsPerFrame) {
@@ -95,9 +81,6 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         }
 
         targetSequence.advance(secondsPerFrame);
-        if (targetSequence.isFinished()) {
-            reset();
-        }
     }
 
     public PointF getLeftPoint() {
@@ -146,6 +129,16 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     @Override
     public void onSequenceFinished() {
         Log.i("main", "finished");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+                reset();
+            }
+        }).start();
     }
 
     @Override
@@ -195,7 +188,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     }
 
     private void onMiss(Target target) {
-        Log.i("main", "missed target");
+//        Log.i("main", "missed target");
         totalCount++;
         comboLength = 0;
     }

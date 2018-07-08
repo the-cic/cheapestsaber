@@ -1,7 +1,7 @@
 bpm 110;lpb 4
 
 define intro
-play Drum4
+play Drum1
 ;
 ;
 ;
@@ -44,7 +44,7 @@ play Drum2
 
 
 start
-;play Drum4
+;play Silence
 ;
 ;
 ;
@@ -216,4 +216,12 @@ RV
 ;
 ;
 ;
-play Drum4
+; //
+;
+;
+;
+; //
+;
+;
+;
+play Silence
