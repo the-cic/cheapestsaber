@@ -23,7 +23,7 @@ public class SequenceLoader {
     private int linesPerBeat = 1;
     private double lineStepSeconds = 1;
     private double lineTime;
-    private double targetDuration = 0.25;
+    private double targetDuration = 0.35;
 
     private enum State {NONE, DEFINITION, MAIN};
     private State state;

@@ -1,6 +1,10 @@
 bpm 110;lpb 4
 
-define intro
+define intro2X
+play Drum1
+;
+;
+;
 play Drum1
 ;
 ;
@@ -26,13 +30,17 @@ play Drum2
 play Drum2
 ;
 
-define beat
+define beat2X
+play Drum3
+;
+play Drum2
+;
 play Drum3
 ;
 play Drum2
 ;
 
-define beatEnd
+define beat2XEnd
 play Drum3
 ;
 play Drum2
@@ -52,99 +60,99 @@ start
 ;
 ;
 ;
-@play intro; LV; // 0
+@play intro2X; LV; // 0
 ;
 ;
 ;
-@play intro
 ;
 ;
 ;
-@play intro; RV
 ;
+@play intro2X; RV
 ;
 ;
-@play intro
 ;
 ;
 ;
-@play intro; R>; // 1
 ;
 ;
+@play intro2X; R>; // 1
 ;
-@play intro
 ;
 ;
 ;
-@play intro; L<
 ;
 ;
 ;
-@play intro
+@play intro2X; L<
 ;
 ;
 ;
-@play intro; LV; // 2
 ;
 ;
 ;
-@play intro
 ;
+@play intro2X; LV; // 2
 ;
 ;
-@play intro; L<
 ;
 ;
 ;
-@play intro
 ;
 ;
+@play intro2X; L<
 ;
-@play intro; RV; // 3
 ;
 ;
 ;
-@play intro
 ;
 ;
 ;
-@play intro; R>
+@play intro2X; RV; // 3
 ;
 ;
 ;
-@play intro
 ;
 ;
 ;
-@play intro; L^; // 4
 ;
+@play intro2X; R>
 ;
 ;
-@play intro
 ;
 ;
 ;
-@play intro; R^
 ;
 ;
+@play intro2X; L^; // 4
 ;
-@play intro
 ;
 ;
 ;
-@play intro; L^; // 5
 ;
 ;
 ;
-@play intro
+@play intro2X; R^
 ;
 ;
 ;
-@play intro; R^
 ;
 ;
 ;
-@play intro
+;
+@play intro2X; L^; // 5
+;
+;
+;
+;
+;
+;
+;
+@play intro2X; R^
+;
+;
+;
+;
 ;
 ;
 ;
@@ -180,35 +188,135 @@ L^
 ;
 ;
 ;
-@play beat; LV; // 8
+@play beat2X; LV; // 8
 ;
 ;
 ;
-@play beat; R>
+; R>
 ;
 ;
 ;
-@play beat; LV
+@play beat2X; LV
 ;
 R<
 ;
-@play beat; R>
+; R>
 ;
 L^
 ;
-@play beat; LV; // 9
+@play beat2X; LV; // 9
 ;
 ;
 ;
-@play beat; R>
+; R>
 ;
 ;
 ;
-@play beatEnd; L<
+@play beat2XEnd; L<
 ;
 RV
 ;
-//@play beat2; R^
+R^
+;
+;
+;
+@play beat2X; L<; // 10
+;
+;
+;
+R>; //
+;
+;
+;
+@play beat2X; LV; //
+;
+R<;
+;
+R>; //
+;
+L^;
+;
+@play beat2X; LV; // 11
+;
+;
+;
+R>; //
+;
+;
+;
+@play beat2XEnd; L<; //
+;
+RV;
+;
+R^; //
+;
+;
+;
+@play beat2X; L<; // 12
+;
+;
+;
+R>; //
+;
+;
+;
+@play beat2X; LV; //
+;
+R<;
+;
+R>; //
+;
+L^;
+;
+@play beat2X; LV; // 13
+;
+;
+;
+R>; //
+;
+;
+;
+@play beat2XEnd; L<; //
+;
+RV;
+;
+R^; //
+;
+;
+;
+@play beat2X; LV; // 14
+;
+;
+;
+R> ; //
+;
+;
+;
+@play beat2X; LV; //
+;
+R<;
+;
+R>; //
+;
+L^;
+;
+@play beat2X; LV; // 15
+;
+;
+;
+R> ; //
+;
+;
+;
+@play beat2XEnd; L<; //
+;
+RV;
+;
+R^; //
+;
+;
+;
+play Drum3; play Drum2; LV; RV; // 16
 ;
 ;
 ;

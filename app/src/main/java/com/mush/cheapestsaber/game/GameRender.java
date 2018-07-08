@@ -96,6 +96,7 @@ public class GameRender {
         }
 
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2);
 
         paint.setColor(0xffff0000);
         drawTool(canvas, game.getLeftTool(), paint);
@@ -106,7 +107,7 @@ public class GameRender {
         canvas.drawText("Hit", 10, 30, scorePaint);
         canvas.drawText("" + game.getHitCount() + " / " + game.getTotalCount(), 10, 50, scorePaint);
         canvas.drawText("Combo", 10, 80, scorePaint);
-        canvas.drawText("" + game.getComboLength(), 10, 100, scorePaint);
+        canvas.drawText("" + game.getComboLength() + " - Best: " +  game.getMaxComboLength(), 10, 100, scorePaint);
     }
 
     private void drawTool(Canvas canvas, Tool tool, Paint paint) {
@@ -124,7 +125,7 @@ public class GameRender {
         float sX = (float) (screenWidth * (0.5 + start.x /2));
         float sY = (float) (screenWidth * (0.5 + start.y / 2));
 
-        canvas.drawCircle(pX, pY, 10, paint);
+//        canvas.drawCircle(pX, pY, 10, paint);
 //        canvas.drawRect(dpX - 10, dpY - 10, dpX + 10, dpY + 10, paint);
         canvas.drawLine(dpX, dpY, pX, pY, paint);
 //        canvas.drawRect(sX - 10, sY - 10, sX + 10, sY + 10, paint);

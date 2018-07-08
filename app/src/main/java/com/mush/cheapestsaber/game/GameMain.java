@@ -33,6 +33,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     private Set<Target> activeTargets;
 
     private int comboLength;
+    private int maxComboLength;
     private int hitCount;
     private int totalCount;
 
@@ -119,11 +120,16 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         return comboLength;
     }
 
+    public int getMaxComboLength() {
+        return maxComboLength;
+    }
+
     public void reset() {
         targetSequence.reset();
         totalCount = 0;
         hitCount = 0;
         comboLength = 0;
+        maxComboLength = 0;
     }
 
     @Override
@@ -185,6 +191,9 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         totalCount++;
         hitCount++;
         comboLength++;
+        if (comboLength > maxComboLength) {
+            maxComboLength = comboLength;
+        }
     }
 
     private void onMiss(Target target) {
