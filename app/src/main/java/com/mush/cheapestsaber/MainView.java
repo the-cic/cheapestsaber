@@ -35,7 +35,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.i("view", "created");
+//        Log.i("view", "created");
 
         setSystemUiVisibility(SYSTEM_UI_FLAG_HIDE_NAVIGATION | SYSTEM_UI_FLAG_IMMERSIVE | SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
@@ -49,7 +49,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.i("view", "changed");
+//        Log.i("view", "changed");
 
         render.resize(width, height);
         content.getInput().resize(render.getInputArea());
@@ -57,7 +57,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.i("view", "destroyed");
+//        Log.i("view", "destroyed");
     }
 
     @Override

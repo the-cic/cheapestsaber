@@ -22,6 +22,8 @@ import java.util.Set;
  */
 public class GameMain implements TargetSequence.SequenceDelegate {
 
+    private static final String TAG = GameMain.class.getSimpleName();
+
     private Context applicationContext;
 
     private PointF leftPoint;
@@ -134,7 +136,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     @Override
     public void onSequenceFinished() {
-        Log.i("main", "finished");
+        Log.i(TAG, "finished");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -149,7 +151,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     @Override
     public void onBecameActive(Target target) {
-  //      Log.i("main", "became active: "+target);
+  //      Log.i(TAG, "became active: "+target);
         Tool tool = getToolForTarget(target);
         if (tool != null) {
             tool.resetStartPoint();
@@ -159,7 +161,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     @Override
     public void onStoppedActive(Target target) {
-//        Log.i("main", "stopped active: "+target);
+//        Log.i(TAG, "stopped active: "+target);
         boolean wasActive = activeTargets.remove(target);
         if (wasActive) {
             onMiss(target);
@@ -168,8 +170,8 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     @Override
     public void onBecameActive(SequenceSound soundItem) {
-//        Log.i("main", "sound: " + soundItem.getText());
-        soundPlayer.play(soundItem.getText());
+//        Log.i(TAG, "sound: " + soundItem.getName());
+        soundPlayer.play(soundItem.getName());
     }
 
     private Tool getToolForTarget(Target target) {
@@ -187,7 +189,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     private void onHit(Target target) {
         target.setHit();
-        Log.i("main", "HIT!");
+        Log.i(TAG, "HIT!");
         totalCount++;
         hitCount++;
         comboLength++;
@@ -197,7 +199,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     }
 
     private void onMiss(Target target) {
-//        Log.i("main", "missed target");
+//        Log.i(TAG, "missed target");
         totalCount++;
         comboLength = 0;
     }

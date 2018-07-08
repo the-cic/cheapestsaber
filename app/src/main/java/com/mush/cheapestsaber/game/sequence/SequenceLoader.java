@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public class SequenceLoader {
 
+    private static final String TAG = SequenceLoader.class.getSimpleName();
+
     private List<String> lines;
     private int beatsPerMinute = 1;
     private int linesPerBeat = 1;
@@ -36,7 +38,7 @@ public class SequenceLoader {
 
         readFile(inputStream);
 
-//        Log.i("loader", "lines:\n" + lines);
+//        Log.i(TAG, "lines:\n" + lines);
         definitionMap = new HashMap<>();
     }
 
@@ -50,7 +52,7 @@ public class SequenceLoader {
                 lines.add(line);
             }
         } catch (IOException e) {
-            Log.e("loader", "" + e);
+            Log.e(TAG, "" + e);
         }
     }
 
@@ -105,17 +107,17 @@ public class SequenceLoader {
             }
         }
 
-        Log.i("loader", "lines:");
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
-            Log.i("loader", i + ": " + line);
-        }
+//        Log.d(TAG, "lines:");
+//        for (int i = 0; i < lines.size(); i++) {
+//            String line = lines.get(i);
+//            Log.d(TAG, i + ": " + line);
+//        }
     }
 
     private void merge(String name, int startIndex) {
-        Log.i("loader", "merge " + name + " at " + startIndex);
+        Log.i(TAG, "merge " + name + " at " + startIndex);
         List<String> definition = definitionMap.get(name);
-        Log.i("loader", "definition: " + definition);
+        Log.d(TAG, "definition: " + definition);
         if (definition != null) {
             for (int i = 0; i < definition.size(); i++) {
                 int index = startIndex + i;
@@ -159,7 +161,7 @@ public class SequenceLoader {
 
     private void parsePlay(String[] parts, double delay) {
         //Log.i("parseInto", "is play, delay: "+ delay+" text: "+ parts[1] );
-        sequence.addItem(new SequenceSound(delay).setText(parts[1]));
+        sequence.addItem(new SequenceSound(delay).setName(parts[1]));
     }
 
     private void parseTarget(String[] parts, double delay) {
@@ -219,13 +221,13 @@ public class SequenceLoader {
         currentDefinition = new ArrayList<>();
         definitionMap.put(definitionName.trim(), currentDefinition);
         state = State.DEFINITION;
-        Log.i("loader", "start define: " + definitionName);
+        Log.i(TAG, "start define: " + definitionName);
     }
 
     private void parseDefine(String[] commands) {
         String line = TextUtils.join(";", commands);
         currentDefinition.add(line);
-        Log.i("loader", "parse define: " +line);
+        Log.d(TAG, "parse define: " +line);
     }
 
     private void parseNone(String[] commands) {

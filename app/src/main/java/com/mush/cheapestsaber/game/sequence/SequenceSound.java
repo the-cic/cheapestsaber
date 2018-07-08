@@ -5,18 +5,18 @@ package com.mush.cheapestsaber.game.sequence;
  */
 public class SequenceSound extends SequenceItem {
 
-    private String text;
+    private String name;
 
     public SequenceSound(double delayTime) {
         super(delayTime);
     }
 
-    public SequenceSound setText(String text) {
-        this.text = text;
+    public SequenceSound setName(String name) {
+        this.name = name;
         return this;
     }
 
-    public String getText() {
-        return text;
+    public String getName() {
+        return name;
     }
 }

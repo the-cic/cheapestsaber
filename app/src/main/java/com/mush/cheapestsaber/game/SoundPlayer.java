@@ -16,6 +16,9 @@ import java.util.Map;
  */
 public class SoundPlayer implements MediaPlayer.OnCompletionListener {
 
+    private static final String TAG = SoundPlayer.class.getSimpleName();
+
+    private final static int MAX_CHANNELS_PER_SOUND = 5;
     private Map<String, Integer> soundMap;
     private Map<String, List<MediaPlayer>> voiceMap;
 
@@ -34,11 +37,7 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void play(String soundName) {
-//        Log.i("sound", "play " + soundName);
-//        Integer resId = soundMap.get(soundName);
-//        if (resId != null) {
-//            new Thread(new SoundPlayerThread(this, soundName)).start();
-//        }
+//        Log.i(TAG, "play " + soundName);
         startMediaPlayerForSound(soundName);
     }
 
@@ -59,12 +58,12 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
                 break;
             }
         }
-        if (mp == null && list.size() > 4) {
-            Log.i("sound", "too many channels");
+        if (mp == null && list.size() >= MAX_CHANNELS_PER_SOUND) {
+            Log.i(TAG, "too many channels");
             return null;
         }
         if (mp == null) {
-            Log.i("sound", "creating new MP for " + name);
+            Log.i(TAG, "creating new MP for " + name);
             mp = MediaPlayer.create(applicationContext, resId);
             mp.setOnCompletionListener(this);
             list.add(mp);
@@ -91,6 +90,6 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        //Log.i("sound", "completed: ");
+        //Log.i(TAG, "completed: ");
     }
 }

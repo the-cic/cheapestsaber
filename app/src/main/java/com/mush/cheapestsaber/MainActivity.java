@@ -38,13 +38,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("main", "pause");
+//        Log.i("main", "pause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("main", "resume");
+//        Log.i("main", "resume");
     }
 
 }

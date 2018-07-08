@@ -52,13 +52,6 @@ public class Tool {
         delayedPosition.offset(dx, dy);
     }
 
-//    private void resetPosition(PointF point) {
-//        if (point != null) {
-//            position.set(point);
-//            delayedPosition.set(point);
-//        }
-//    }
-
     public void resetStartPoint() {
         startPoint.set(position);
         direction.set(0, 0);

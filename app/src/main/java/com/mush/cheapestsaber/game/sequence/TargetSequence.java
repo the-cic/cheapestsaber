@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class TargetSequence implements SequenceItem.ActivationDelegate {
 
+    private final static String TAG = TargetSequence.class.getSimpleName();
+
     public interface SequenceDelegate {
         public void onSequenceFinished();
 
@@ -54,7 +56,7 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
     }
 
     public void reset() {
-        Log.i("seq", "reset");
+        Log.i(TAG, "reset");
         timePosition = 0;
         windowIndex = 0;
         finished = false;
@@ -152,7 +154,7 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
 
     @Override
     public void onBecameActive(SequenceItem item) {
-//        Log.i("seq", "on became active: " + item);
+//        Log.i(TAG, "on became active: " + item);
         if (item instanceof Target && delegate != null) {
             delegate.onBecameActive((Target) item);
         } else if (item instanceof SequenceSound) {
@@ -169,7 +171,7 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
 
     public void log() {
         for (SequenceItem item : itemList) {
-            Log.i("seq", item.getStartTime() + " : " + item.getClass());
+            Log.i(TAG, item.getStartTime() + " : " + item.getClass());
 
         }
     }
