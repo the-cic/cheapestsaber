@@ -1,6 +1,7 @@
 package com.mush.cheapestsaber.game;
 
 import android.graphics.Point;
+import android.util.Log;
 
 /**
  * Created by mush on 07/07/2018.
@@ -43,8 +44,10 @@ public class SequenceItem {
     public void setCurrentTime(double currentTime) {
         currentTimeStartOffset = startTime - currentTime;
         active = calculateActive(currentTime);
+//        Log.i("item", "set c time " + currentTime + ", start: " + startTime + " , active " + active + " " + this.getClass());
         if (active != wasActive && delegate != null) {
             if (active) {
+//                Log.i("item", "set c time, became active " + this);
                 delegate.onBecameActive(this);
             } else {
                 delegate.onStoppedActive(this);

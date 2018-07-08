@@ -1,6 +1,5 @@
 package com.mush.cheapestsaber.game;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -49,6 +48,9 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     private void createSequence() {
         SequenceLoader loader = new SequenceLoader(applicationContext, R.raw.sequence1);
 
+        loader.parseInto(targetSequence);
+
+        /*
         targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(-1, 0));
         targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 1, 1).setOffset( 1, 1));
         targetSequence.addItem(new SequenceSound(0.5).setText("text1"));
@@ -58,6 +60,9 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         targetSequence.addItem(new SequenceSound(0.5).setText("text2"));
         targetSequence.addItem(new SequenceSound(0.0).setText("text3"));
         targetSequence.addItem(new Target(0.5, 0.25).setShape(Target.SIDE_LEFT, 0, -1).setOffset( 1, 0));
+        targetSequence.addItem(new Target(2.0, 0.25).setShape(Target.SIDE_LEFT, 1, 0).setOffset(0, 0));
+        targetSequence.addItem(new Target(1.0, 0.25).setShape(Target.SIDE_RIGHT, 0, 1).setOffset(0, 0));
+        */
     }
 
     public void processInput(GameInput input, double secondsPerFrame) {
@@ -151,6 +156,11 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         if (wasActive) {
             onMiss(target);
         }
+    }
+
+    @Override
+    public void onBecameActive(SequenceSound soundItem) {
+        Log.i("main", "sound: " + soundItem.getText());
     }
 
     private Tool getToolForTarget(Target target) {

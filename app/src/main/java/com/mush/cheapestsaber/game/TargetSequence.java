@@ -15,6 +15,8 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
 
         public void onBecameActive(Target target);
 
+        public void onBecameActive(SequenceSound soundItem);
+
         public void onStoppedActive(Target target);
     }
 
@@ -30,11 +32,18 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
     public TargetSequence() {
         itemList = new ArrayList<>();
         targetWindow = new ArrayList<>();
+        clear();
+        reset();
+    }
+
+    public void clear(){
+        itemList.clear();
+        targetWindow.clear();
         reset();
     }
 
     public void addItem(SequenceItem item) {
-        SequenceItem lastItem = getNextItem(itemList.size() - 1);
+        SequenceItem lastItem = getLastItem();
         if (lastItem == null) {
             item.setTimeFrom(0);
         } else {
@@ -93,7 +102,7 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
             return target.getEndTime() < timePosition - 0.5;
         } else {
             // no duration, also no need to keep in window
-            return item.getStartTime() < timePosition;
+            return item.getStartTime() < timePosition - 0.5;
         }
     }
 
@@ -103,6 +112,10 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
         } else {
             return null;
         }
+    }
+
+    public SequenceItem getLastItem() {
+        return getNextItem(itemList.size() - 1);
     }
 
     public void setWindowDuration(double windowDuration) {
@@ -139,10 +152,11 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
 
     @Override
     public void onBecameActive(SequenceItem item) {
+//        Log.i("seq", "on became active: " + item);
         if (item instanceof Target && delegate != null) {
             delegate.onBecameActive((Target) item);
         } else if (item instanceof SequenceSound) {
-            Log.i("seq", "sound: " + ((SequenceSound) item).getText());
+            delegate.onBecameActive((SequenceSound) item);
         }
     }
 
@@ -150,6 +164,13 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
     public void onStoppedActive(SequenceItem item) {
         if (item instanceof Target && delegate != null) {
             delegate.onStoppedActive((Target) item);
+        }
+    }
+
+    public void log() {
+        for (SequenceItem item : itemList) {
+            Log.i("seq", item.getStartTime() + " : " + item.getClass());
+
         }
     }
 }

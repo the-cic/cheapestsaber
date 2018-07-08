@@ -1,8 +1,47 @@
 bpm 60;lpb 4
 
+define loop1
+play Drum1
+;
+play Drum2
+;
+
+
 start
-.
-.
-.
-.
+play @loop1
+;
+;
+;
+play @loop1; L>,-1,-1
+;
+;
+; play Drum3
+R>/
+;
+;
+;
+L<
+;
+;
+;
 L>
+;
+;
+;
+RV,-1
+;
+;
+;
+L^,1
+;
+;
+;
+L>,0,0
+;
+;
+;
+RV,0,0
+;
+;
+;
+
