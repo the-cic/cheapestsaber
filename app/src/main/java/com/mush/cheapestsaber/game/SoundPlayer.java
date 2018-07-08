@@ -35,10 +35,11 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
 
     public void play(String soundName) {
 //        Log.i("sound", "play " + soundName);
-        Integer resId = soundMap.get(soundName);
-        if (resId != null) {
-            new Thread(new SoundPlayerThread(this, soundName)).start();
-        }
+//        Integer resId = soundMap.get(soundName);
+//        if (resId != null) {
+//            new Thread(new SoundPlayerThread(this, soundName)).start();
+//        }
+        startMediaPlayerForSound(soundName);
     }
 
     public MediaPlayer getMediaPlayerForSound(String name) {
