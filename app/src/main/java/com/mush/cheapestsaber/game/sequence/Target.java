@@ -1,4 +1,4 @@
-package com.mush.cheapestsaber.game;
+package com.mush.cheapestsaber.game.sequence;
 
 import android.graphics.Point;
 

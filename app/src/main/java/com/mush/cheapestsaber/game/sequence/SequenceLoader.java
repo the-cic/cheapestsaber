@@ -1,6 +1,7 @@
-package com.mush.cheapestsaber.game;
+package com.mush.cheapestsaber.game.sequence;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -59,7 +60,9 @@ public class SequenceLoader {
         definitionMap.clear();
         state = State.NONE;
 
-        for (String line : lines) {
+        // looping by index as preprocess() changes the content
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
             String[] commands = line.trim().isEmpty() ? null : line.split(";");
             if (commands == null) {
                 state = State.NONE;
@@ -79,6 +82,49 @@ public class SequenceLoader {
         }
 
 //        sequence.log();
+    }
+
+    private void startMain() {
+        preprocess();
+        state = State.MAIN;
+        lineTime = 0;
+    }
+
+    private void preprocess() {
+        final String PLAY = "@play ";
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            String[] commands = line.trim().isEmpty() ? null : line.split(";");
+            if (commands != null){
+                for (String command : commands) {
+                    if (command.startsWith(PLAY)) {
+                        String name = command.substring(PLAY.length()).trim();
+                        merge(name, i);
+                    }
+                }
+            }
+        }
+
+        Log.i("loader", "lines:");
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            Log.i("loader", i + ": " + line);
+        }
+    }
+
+    private void merge(String name, int startIndex) {
+        Log.i("loader", "merge " + name + " at " + startIndex);
+        List<String> definition = definitionMap.get(name);
+        Log.i("loader", "definition: " + definition);
+        if (definition != null) {
+            for (int i = 0; i < definition.size(); i++) {
+                int index = startIndex + i;
+                String addLine = definition.get(i);
+                if (index < lines.size()) {
+                    lines.set(index, lines.get(index) + ";" + addLine);
+                }
+            }
+        }
     }
 
     private void parseMain(String[] commands) {
@@ -169,7 +215,17 @@ public class SequenceLoader {
         sequence.addItem(new Target(delay, targetDuration).setShape(side, dirX, dirY).setOffset(offsetX, offsetY));
     }
 
+    private void startDefine(String definitionName) {
+        currentDefinition = new ArrayList<>();
+        definitionMap.put(definitionName.trim(), currentDefinition);
+        state = State.DEFINITION;
+        Log.i("loader", "start define: " + definitionName);
+    }
+
     private void parseDefine(String[] commands) {
+        String line = TextUtils.join(";", commands);
+        currentDefinition.add(line);
+        Log.i("loader", "parse define: " +line);
     }
 
     private void parseNone(String[] commands) {
@@ -198,10 +254,10 @@ public class SequenceLoader {
                 calculateTimeStep();
                 break;
             case "define":
+                startDefine(parts[1]);
                 break;
             case "start":
-                state = State.MAIN;
-                lineTime = 0;
+                startMain();
                 break;
         }
     }

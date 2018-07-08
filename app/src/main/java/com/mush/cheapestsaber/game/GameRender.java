@@ -8,6 +8,9 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 
+import com.mush.cheapestsaber.game.sequence.SequenceItem;
+import com.mush.cheapestsaber.game.sequence.Target;
+
 import java.util.List;
 
 /**

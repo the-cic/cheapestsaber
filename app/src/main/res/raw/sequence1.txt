@@ -8,27 +8,31 @@ play Drum2
 
 
 start
-play @loop1
+play Drum1;
+;
+;play Drum2
+;
+;play Drum3
+;
+;play Drum4
+;
+play Drum2; L>,-1,-1
 ;
 ;
 ;
-play @loop1; L>,-1,-1
+play Drum1; R>/
 ;
+;play Drum2
 ;
-; play Drum3
-R>/
+play Drum1; L<
 ;
+;play Drum2
 ;
-;
-L<
-;
-;
-;
-L>
+@play loop1; L>
 ;
 ;
 ;
-RV,-1
+@play loop1; RV,-1
 ;
 ;
 ;
@@ -36,11 +40,11 @@ L^,1
 ;
 ;
 ;
-L>,0,0
-;
-;
-;
-RV,0,0
+play Drum1; play Drum2; L>,0,0
+;play Drum1
+;play Drum1
+;play Drum1
+play Drum2; RV,0,0
 ;
 ;
 ;

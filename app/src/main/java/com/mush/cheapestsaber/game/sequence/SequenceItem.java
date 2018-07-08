@@ -1,7 +1,4 @@
-package com.mush.cheapestsaber.game;
-
-import android.graphics.Point;
-import android.util.Log;
+package com.mush.cheapestsaber.game.sequence;
 
 /**
  * Created by mush on 07/07/2018.

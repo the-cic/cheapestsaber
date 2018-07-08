@@ -1,4 +1,4 @@
-package com.mush.cheapestsaber.game;
+package com.mush.cheapestsaber.game.sequence;
 
 /**
  * Created by mush on 07/07/2018.

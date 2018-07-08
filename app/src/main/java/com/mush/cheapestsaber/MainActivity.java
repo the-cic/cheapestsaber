@@ -46,4 +46,5 @@ public class MainActivity extends Activity {
         super.onResume();
         Log.i("main", "resume");
     }
+
 }

@@ -6,6 +6,11 @@ import android.graphics.PointF;
 import android.util.Log;
 
 import com.mush.cheapestsaber.R;
+import com.mush.cheapestsaber.game.sequence.SequenceItem;
+import com.mush.cheapestsaber.game.sequence.SequenceLoader;
+import com.mush.cheapestsaber.game.sequence.SequenceSound;
+import com.mush.cheapestsaber.game.sequence.Target;
+import com.mush.cheapestsaber.game.sequence.TargetSequence;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,8 +36,12 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     private int hitCount;
     private int totalCount;
 
+    private SoundPlayer soundPlayer;
+
     public GameMain(Context appContext) {
         applicationContext = appContext;
+
+        soundPlayer = new SoundPlayer(appContext);
 
         targetSequence = new TargetSequence();
         targetSequence.delegate = this;
@@ -161,6 +170,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     @Override
     public void onBecameActive(SequenceSound soundItem) {
         Log.i("main", "sound: " + soundItem.getText());
+        soundPlayer.play(soundItem.getText());
     }
 
     private Tool getToolForTarget(Target target) {
