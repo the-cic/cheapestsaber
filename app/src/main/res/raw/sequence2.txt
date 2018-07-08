@@ -1,11 +1,11 @@
-bpm 110;lpb 4
+bpm 105;lpb 4
 
 define intro2X
-play Drum1
+play Drum4
 ;
 ;
 ;
-play Drum1
+play Drum4
 ;
 ;
 ;
@@ -34,7 +34,7 @@ define beat2X
 play Drum3
 ;
 play Drum2
-;
+play Drum1;
 play Drum3
 ;
 play Drum2

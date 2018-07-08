@@ -33,12 +33,15 @@ public class GameRender {
     private Paint targetStemPaint;
     private Paint leftTargetPaint;
     private Paint rightTargetPaint;
-    private Paint leftObjectTargetPaint;
-    private Paint rightObjectTargetPaint;
+    private Paint leftTargetOutlinePaint;
+    private Paint rightTargetOutlinePaint;
+    private Paint leftActiveTargetPaint;
+    private Paint rightActiveTargetPaint;
     private Paint hitObjectTargetPaint;
     private Paint targetPaint;
     private Paint targetDestinationPaint;
     private Path targetArrowPath;
+    private Path targetBoxPath;
 
     public GameRender() {
         scorePaint = makeFillPaint(0xffffffff);
@@ -47,10 +50,12 @@ public class GameRender {
         targetStemPaint = makeFillPaint(0xff888888);
         targetPaint = makeFillPaint(0xffffff00);
         targetDestinationPaint = makeFillPaint(0xffffff00);
-        leftTargetPaint = makeFillPaint(0xffff0000);
-        rightTargetPaint = makeFillPaint(0xff0000ff);
-        leftObjectTargetPaint = makeFillPaint(0xffff8888);
-        rightObjectTargetPaint = makeFillPaint(0xff8888ff);
+        leftTargetPaint = makeFillPaint(0xffcf0000);
+        rightTargetPaint = makeFillPaint(0xff0000cf);
+        leftTargetOutlinePaint = makeFillPaint(0xff800000);
+        rightTargetOutlinePaint = makeFillPaint(0xff000080);
+        leftActiveTargetPaint = makeFillPaint(0xffff8888);
+        rightActiveTargetPaint = makeFillPaint(0xff8888ff);
         hitObjectTargetPaint = makeFillPaint(0xff88ff88);
 
         Typeface fpsTypeface = Typeface.create("sans-serif", Typeface.BOLD);
@@ -61,9 +66,10 @@ public class GameRender {
     }
 
     public void draw(Canvas canvas, GameMain game) {
-        Paint paint = makeFillPaint(0xffffffff);
+        Paint paint = makeFillPaint(0xff888888);
 
         canvas.drawLine(0, inputArea.top, inputArea.width(), inputArea.top, paint);
+        canvas.drawLine(0, inputArea.bottom, inputArea.width(), inputArea.bottom, paint);
         canvas.drawLine(inputArea.width() * 0.5f, inputArea.top, inputArea.width() * 0.5f, inputArea.bottom, paint);
 
         double windowDuration = game.getTargetWindowDuration();
@@ -82,26 +88,26 @@ public class GameRender {
 
         canvas.restore();
 
-        PointF leftPoint = game.getLeftPoint();
-        PointF rightPoint = game.getRightPoint();
+//        PointF leftPoint = game.getLeftPoint();
+//        PointF rightPoint = game.getRightPoint();
 
-        if (leftPoint != null) {
-            paint.setColor(0x5fff0000);
-            canvas.drawCircle((float) (screenWidth * (0.5 + leftPoint.x /2)), (float) (screenWidth * (0.5 + leftPoint.y / 2)), 2.5f, paint);
-        }
-
-        if (rightPoint != null) {
-            paint.setColor(0x5f0000ff);
-            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 2.5f, paint);
-        }
+//        if (leftPoint != null) {
+//            paint.setColor(0x5fff0000);
+//            canvas.drawCircle((float) (screenWidth * (0.5 + leftPoint.x /2)), (float) (screenWidth * (0.5 + leftPoint.y / 2)), 2.5f, paint);
+//        }
+//
+//        if (rightPoint != null) {
+//            paint.setColor(0x5f0000ff);
+//            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 2.5f, paint);
+//        }
 
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
+        paint.setStrokeWidth(4);
 
-        paint.setColor(0xffff0000);
+        paint.setColor(leftActiveTargetPaint.getColor());
         drawTool(canvas, game.getLeftTool(), paint);
 
-        paint.setColor(0xff0000ff);
+        paint.setColor(rightActiveTargetPaint.getColor());
         drawTool(canvas, game.getRightTool(), paint);
 
         canvas.drawText("Hit", 10, 30, scorePaint);
@@ -192,15 +198,27 @@ public class GameRender {
             paint.setColor(hitObjectTargetPaint.getColor());
         }
         else if (target.getSide() == Target.SIDE_LEFT) {
-            paint.setColor(target.isActive() ? leftObjectTargetPaint.getColor() : leftTargetPaint.getColor());
+            paint.setColor(target.isActive() ? leftActiveTargetPaint.getColor() : leftTargetPaint.getColor());
         } else if (target.getSide() == Target.SIDE_RIGHT) {
-            paint.setColor(target.isActive() ? rightObjectTargetPaint.getColor() : rightTargetPaint.getColor());
+            paint.setColor(target.isActive() ? rightActiveTargetPaint.getColor() : rightTargetPaint.getColor());
         }
 
         float halfSize = size / 2;
         float margin = 0.8f;
 
-        canvas.drawRect(- halfSize, - halfSize, + halfSize, + halfSize, paint);
+        canvas.drawPath(targetBoxPath, paint);
+
+        if (!target.isHit()) {
+            paint = targetDestinationPaint;
+            if (target.getSide() == Target.SIDE_LEFT) {
+                paint.setColor(leftTargetOutlinePaint.getColor());
+            } else if (target.getSide() == Target.SIDE_RIGHT) {
+                paint.setColor(rightTargetOutlinePaint.getColor());
+            }
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(2);
+            canvas.drawPath(targetBoxPath, paint);
+        }
 
         Point direction = target.getDirection();
 
@@ -214,6 +232,13 @@ public class GameRender {
         if (percent < minPercent || percent > 1) {
             return;
         }
+
+        if (target.getSide() == Target.SIDE_LEFT) {
+            paint.setColor(leftActiveTargetPaint.getColor());
+        } else if (target.getSide() == Target.SIDE_RIGHT) {
+            paint.setColor(rightActiveTargetPaint.getColor());
+        }
+
         float showPercent = (float) ((percent - minPercent) / ( 1 - minPercent));
         float iShowPercent = 1 - showPercent;
         int rgb = paint.getColor() & 0x00ffffff;
@@ -225,22 +250,40 @@ public class GameRender {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2);
 
-        canvas.drawRect(
-                - halfSize - halfSize * iShowPercent * 2,
-                - halfSize - halfSize * iShowPercent * 2,
-                + halfSize + halfSize * iShowPercent * 2,
-                + halfSize + halfSize * iShowPercent * 2, paint);
+        float scale = (1 + iShowPercent * 2);
+        canvas.scale(scale, scale);
+        canvas.drawPath(targetBoxPath, paint);
+    }
+
+    private void makeTargetBoxPath(float size) {
+        float border = size / 2;
+        float margin = border * 0.7f;
+
+        Path path = new Path();
+        path.moveTo(- margin, - border);
+        path.lineTo(+ margin, - border);
+        path.lineTo(+ border, - margin);
+        path.lineTo(+ border, + margin);
+        path.lineTo(+ margin, + border);
+        path.lineTo(- margin, + border);
+        path.lineTo(- border, + margin);
+        path.lineTo(- border, - margin);
+        path.lineTo(- margin, - border);
+
+        targetBoxPath = path;
     }
 
     private void makeTargetArrowPath(float size){
         float halfSize = size / 2;
         float margin = 0.8f;
+        float wmargin = 0.7f;
 
         Path path = new Path();
-        path.moveTo(- halfSize * margin, - halfSize * margin);
-        path.lineTo(- halfSize * margin, + halfSize * margin);
-        path.lineTo(0, 0);
-        path.lineTo(- halfSize * margin, - halfSize * margin);
+        path.moveTo(- halfSize * margin, - halfSize * wmargin);
+        path.lineTo(- halfSize * margin, + halfSize * wmargin);
+        path.lineTo(-halfSize * (margin - wmargin), 0);
+        path.lineTo(- halfSize * margin, - halfSize * wmargin);
+
         targetArrowPath = path;
     }
 
@@ -248,10 +291,11 @@ public class GameRender {
         screenWidth = width;
         screenHeight = height;
         // 2 x 1 box at the bottom
-        inputArea = new RectF(0, height - width / 2, width, height);
-        playArea = new RectF(0, 0, width, inputArea.top);
+        inputArea = new RectF(0, height * 0.9f - width / 2, width, height * 0.9f);
+        playArea = new RectF(0, 0, width, height * 1.0f - width / 2);
 
         makeTargetArrowPath(getBoxSize());
+        makeTargetBoxPath(getBoxSize());
     }
 
     public RectF getInputArea() {
