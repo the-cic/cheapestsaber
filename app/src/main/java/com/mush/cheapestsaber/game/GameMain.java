@@ -55,7 +55,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     }
 
     private void createSequence() {
-        SequenceLoader loader = new SequenceLoader(applicationContext, R.raw.sequence1);
+        SequenceLoader loader = new SequenceLoader(applicationContext, R.raw.sequence2);
 
         loader.parseInto(targetSequence);
 
@@ -169,7 +169,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     @Override
     public void onBecameActive(SequenceSound soundItem) {
-        Log.i("main", "sound: " + soundItem.getText());
+//        Log.i("main", "sound: " + soundItem.getText());
         soundPlayer.play(soundItem.getText());
     }
 

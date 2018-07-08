@@ -103,8 +103,10 @@ public class GameRender {
         paint.setColor(0xff0000ff);
         drawTool(canvas, game.getRightTool(), paint);
 
-        canvas.drawText("Combo", 10, 30, scorePaint);
-        canvas.drawText("" + game.getComboLength(), 10, 50, scorePaint);
+        canvas.drawText("Hit", 10, 30, scorePaint);
+        canvas.drawText("" + game.getHitCount() + " / " + game.getTotalCount(), 10, 50, scorePaint);
+        canvas.drawText("Combo", 10, 80, scorePaint);
+        canvas.drawText("" + game.getComboLength(), 10, 100, scorePaint);
     }
 
     private void drawTool(Canvas canvas, Tool tool, Paint paint) {
@@ -123,11 +125,11 @@ public class GameRender {
         float sY = (float) (screenWidth * (0.5 + start.y / 2));
 
         canvas.drawCircle(pX, pY, 10, paint);
-        canvas.drawRect(dpX - 10, dpY - 10, dpX + 10, dpY + 10, paint);
+//        canvas.drawRect(dpX - 10, dpY - 10, dpX + 10, dpY + 10, paint);
         canvas.drawLine(dpX, dpY, pX, pY, paint);
-        canvas.drawRect(sX - 10, sY - 10, sX + 10, sY + 10, paint);
+//        canvas.drawRect(sX - 10, sY - 10, sX + 10, sY + 10, paint);
 
-        canvas.drawLine(pX, pY, pX + direction.x * 100, pY + direction.y *100, paint);
+//        canvas.drawLine(pX, pY, pX + direction.x * 100, pY + direction.y *100, paint);
     }
 
     private float getBoxSize() {

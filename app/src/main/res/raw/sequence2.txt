@@ -1,0 +1,219 @@
+bpm 110;lpb 4
+
+define intro
+play Drum4
+;
+;
+;
+
+define transition1
+play Drum1;play Drum4
+;
+play Drum2
+play Drum2
+play Drum1;
+;
+play Drum2
+;
+
+define transition2
+play Drum1;play Drum4
+;
+play Drum2
+play Drum2
+play Drum1
+play Drum2
+play Drum2
+;
+
+define beat
+play Drum3
+;
+play Drum2
+;
+
+define beatEnd
+play Drum3
+;
+play Drum2
+;
+play Drum2
+;
+;
+;
+
+
+start
+;play Drum4
+;
+;
+;
+;
+;
+;
+;
+@play intro; LV; // 0
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; RV
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; R>; // 1
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; L<
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; LV; // 2
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; L<
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; RV; // 3
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; R>
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; L^; // 4
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; R^
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; L^; // 5
+;
+;
+;
+@play intro
+;
+;
+;
+@play intro; R^
+;
+;
+;
+@play intro
+;
+;
+;
+@play transition1; LV; // 6
+;
+;
+;
+RV
+;
+;
+;
+@play transition2; LV
+;
+;
+;
+RV
+;
+;
+;
+@play transition1; LV; // 7
+;
+RV
+;
+L^
+;
+R^
+;
+@play transition2; LV
+;
+RV
+;
+L^
+;
+;
+;
+@play beat; LV; // 8
+;
+;
+;
+@play beat; R>
+;
+;
+;
+@play beat; LV
+;
+R<
+;
+@play beat; R>
+;
+L^
+;
+@play beat; LV; // 9
+;
+;
+;
+@play beat; R>
+;
+;
+;
+@play beatEnd; L<
+;
+RV
+;
+//@play beat2; R^
+;
+;
+;
+; //
+;
+;
+;
+play Drum4

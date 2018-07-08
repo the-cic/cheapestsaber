@@ -84,7 +84,7 @@ public class Tool {
         float dx = position.x - startPoint.x;
         float dy = position.y - startPoint.y;
         double d = Math.sqrt(dx * dx + dy * dy);
-        if (d > 0.25) {
+        if (d > 0.15) {
             dx /= d;
             dy /= d;
 

@@ -36,18 +36,26 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void play(String soundName) {
-        if (channels.size() >= 4) {
+        if (channels.size() >= 6) {
             Log.i("sound", "too many channels");
             return;
         }
         Integer resId = soundMap.get(soundName);
         if (resId != null) {
-            Log.i("sound", "play: " + soundName);
-            MediaPlayer mp = MediaPlayer.create(applicationContext, resId);
-            channels.add(mp);
-            mp.setOnCompletionListener(this);
-            mp.start();
+//            Log.i("sound", "play: " + soundName);
+            new Thread(new SoundPlayerThread(this, resId)).start();
+//            MediaPlayer mp = MediaPlayer.create(applicationContext, resId);
+//            channels.add(mp);
+//            mp.setOnCompletionListener(this);
+//            mp.start();
         }
+    }
+
+    public void startMediaPlayerForResource(int resId) {
+        MediaPlayer mp = MediaPlayer.create(applicationContext, resId);
+        channels.add(mp);
+        mp.setOnCompletionListener(this);
+        mp.start();
     }
 
     public void release() {
