@@ -18,59 +18,28 @@ import java.util.List;
  */
 public class GameRender {
 
-    private double lowFps;
-    private double hiFps;
-    private double avgFps;
-    private int fpsCount;
-
     private int screenWidth;
     private int screenHeight;
     private RectF inputArea;
     private RectF playArea;
 
-    private Paint scorePaint;
-    private Paint targetHilightPaint;
-    private Paint targetStemPaint;
-    private Paint leftTargetPaint;
-    private Paint rightTargetPaint;
-    private Paint leftTargetOutlinePaint;
-    private Paint rightTargetOutlinePaint;
-    private Paint leftActiveTargetPaint;
-    private Paint rightActiveTargetPaint;
-    private Paint hitObjectTargetPaint;
-    private Paint targetPaint;
-    private Paint targetDestinationPaint;
+    private PaintPalette paints;
+
     private Path targetArrowPath;
     private Path targetBoxPath;
 
-    public GameRender() {
-        scorePaint = makeFillPaint(0xffffffff);
-        targetHilightPaint = makeFillPaint(0xffffffff);
-        targetHilightPaint.setStrokeWidth(3);
-        targetStemPaint = makeFillPaint(0xff888888);
-        targetPaint = makeFillPaint(0xffffff00);
-        targetDestinationPaint = makeFillPaint(0xffffff00);
-        leftTargetPaint = makeFillPaint(0xffcf0000);
-        rightTargetPaint = makeFillPaint(0xff0000cf);
-        leftTargetOutlinePaint = makeFillPaint(0xff800000);
-        rightTargetOutlinePaint = makeFillPaint(0xff000080);
-        leftActiveTargetPaint = makeFillPaint(0xffff8888);
-        rightActiveTargetPaint = makeFillPaint(0xff8888ff);
-        hitObjectTargetPaint = makeFillPaint(0xff88ff88);
+    private final float boxSizeToScreenFactor = 0.1f;
 
-        Typeface fpsTypeface = Typeface.create("sans-serif", Typeface.BOLD);
-        scorePaint.setTextSize(20);
-        scorePaint.setTypeface(fpsTypeface);
+    public GameRender() {
+        paints = new PaintPalette();
 
         makeTargetArrowPath(100);
     }
 
     public void draw(Canvas canvas, GameMain game) {
-        Paint paint = makeFillPaint(0xff888888);
-
-        canvas.drawLine(0, inputArea.top, inputArea.width(), inputArea.top, paint);
-        canvas.drawLine(0, inputArea.bottom, inputArea.width(), inputArea.bottom, paint);
-        canvas.drawLine(inputArea.width() * 0.5f, inputArea.top, inputArea.width() * 0.5f, inputArea.bottom, paint);
+        canvas.drawLine(0, inputArea.top, inputArea.width(), inputArea.top, paints.gridPaint);
+        canvas.drawLine(0, inputArea.bottom, inputArea.width(), inputArea.bottom, paints.gridPaint);
+        canvas.drawLine(inputArea.width() * 0.5f, inputArea.top, inputArea.width() * 0.5f, inputArea.bottom, paints.gridPaint);
 
         double windowDuration = game.getTargetWindowDuration();
         List<SequenceItem> targetWindow = game.getTargetWindow();
@@ -101,19 +70,19 @@ public class GameRender {
 //            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 2.5f, paint);
 //        }
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(4);
+        paints.toolPaint.setStyle(Paint.Style.STROKE);
+        paints.toolPaint.setStrokeWidth(4);
 
-        paint.setColor(leftActiveTargetPaint.getColor());
-        drawTool(canvas, game.getLeftTool(), paint);
+        paints.toolPaint.setColor(paints.leftActiveTargetPaint.getColor());
+        drawTool(canvas, game.getLeftTool(), paints.toolPaint);
 
-        paint.setColor(rightActiveTargetPaint.getColor());
-        drawTool(canvas, game.getRightTool(), paint);
+        paints.toolPaint.setColor(paints.rightActiveTargetPaint.getColor());
+        drawTool(canvas, game.getRightTool(), paints.toolPaint);
 
-        canvas.drawText("Hit", 10, 30, scorePaint);
-        canvas.drawText("" + game.getHitCount() + " / " + game.getTotalCount(), 10, 50, scorePaint);
-        canvas.drawText("Combo", 10, 80, scorePaint);
-        canvas.drawText("" + game.getComboLength() + " - Best: " +  game.getMaxComboLength(), 10, 100, scorePaint);
+        canvas.drawText("Hit", 10, 30, paints.scorePaint);
+        canvas.drawText("" + game.getHitCount() + " / " + game.getTotalCount(), 10, 50, paints.scorePaint);
+        canvas.drawText("Combo", 10, 80, paints.scorePaint);
+        canvas.drawText("" + game.getComboLength() + " - Best: " +  game.getMaxComboLength(), 10, 100, paints.scorePaint);
     }
 
     private void drawTool(Canvas canvas, Tool tool, Paint paint) {
@@ -140,7 +109,7 @@ public class GameRender {
     }
 
     private float getBoxSize() {
-        return playArea.width() / 10;
+        return playArea.width() * boxSizeToScreenFactor;
     }
 
     private void drawTarget(Canvas canvas, Target target, double windowDuration) {
@@ -193,14 +162,14 @@ public class GameRender {
     }
 
     private void drawTargetBox(Canvas canvas, Target target, float size, double percent) {
-        Paint paint = targetPaint;
+        Paint paint = paints.targetPaint;
         if (target.isHit()) {
-            paint.setColor(hitObjectTargetPaint.getColor());
+            paint.setColor(paints.hitObjectTargetPaint.getColor());
         }
         else if (target.getSide() == Target.SIDE_LEFT) {
-            paint.setColor(target.isActive() ? leftActiveTargetPaint.getColor() : leftTargetPaint.getColor());
+            paint.setColor(target.isActive() ? paints.leftActiveTargetPaint.getColor() : paints.leftTargetPaint.getColor());
         } else if (target.getSide() == Target.SIDE_RIGHT) {
-            paint.setColor(target.isActive() ? rightActiveTargetPaint.getColor() : rightTargetPaint.getColor());
+            paint.setColor(target.isActive() ? paints.rightActiveTargetPaint.getColor() : paints.rightTargetPaint.getColor());
         }
 
         float halfSize = size / 2;
@@ -209,11 +178,11 @@ public class GameRender {
         canvas.drawPath(targetBoxPath, paint);
 
         if (!target.isHit()) {
-            paint = targetDestinationPaint;
+            paint = paints.targetDestinationPaint;
             if (target.getSide() == Target.SIDE_LEFT) {
-                paint.setColor(leftTargetOutlinePaint.getColor());
+                paint.setColor(paints.leftTargetOutlinePaint.getColor());
             } else if (target.getSide() == Target.SIDE_RIGHT) {
-                paint.setColor(rightTargetOutlinePaint.getColor());
+                paint.setColor(paints.rightTargetOutlinePaint.getColor());
             }
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(2);
@@ -223,7 +192,7 @@ public class GameRender {
         Point direction = target.getDirection();
 
         if (direction != null) {
-            canvas.drawPath(targetArrowPath, targetHilightPaint);
+            canvas.drawPath(targetArrowPath, paints.targetHilightPaint);
         }
 
         // Anticipation hint
@@ -234,9 +203,9 @@ public class GameRender {
         }
 
         if (target.getSide() == Target.SIDE_LEFT) {
-            paint.setColor(leftActiveTargetPaint.getColor());
+            paint.setColor(paints.leftActiveTargetPaint.getColor());
         } else if (target.getSide() == Target.SIDE_RIGHT) {
-            paint.setColor(rightActiveTargetPaint.getColor());
+            paint.setColor(paints.rightActiveTargetPaint.getColor());
         }
 
         float showPercent = (float) ((percent - minPercent) / ( 1 - minPercent));
@@ -245,7 +214,7 @@ public class GameRender {
         int alpha = (int) (0xff * showPercent * 2);
         alpha = alpha > 0xff ? 0xff : alpha;
 
-        paint = targetDestinationPaint;
+        paint = paints.targetDestinationPaint;
         paint.setColor(rgb | (alpha << 24));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2);
@@ -300,38 +269,6 @@ public class GameRender {
 
     public RectF getInputArea() {
         return inputArea;
-    }
-
-    public void drawFps(Canvas canvas, double secondsPerFrame) {
-        double fps = 1 / secondsPerFrame;
-        if (fpsCount == 0) {
-            lowFps = 100000;
-            hiFps = 0;
-        }
-        if (fps < lowFps) {
-            lowFps = fps;
-        }
-        if (fps > hiFps) {
-            hiFps = fps;
-        }
-        fpsCount++;
-        if (fpsCount > 30) {
-            fpsCount = 0;
-        }
-        avgFps = avgFps * 0.9 + fps * 0.1;
-
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(0xff00ff00);
-
-        canvas.drawText((int)avgFps + " " + (int)lowFps + " " + (int)hiFps, 10, 10, paint);
-    }
-
-    private Paint makeFillPaint(int color) {
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(color);
-        return paint;
     }
 
 }

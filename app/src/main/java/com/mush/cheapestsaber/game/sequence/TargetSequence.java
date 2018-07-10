@@ -29,6 +29,9 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
     private double windowDuration;
     private boolean finished;
 
+    private long startTime;
+    private double realTimePosition;
+
     public SequenceDelegate delegate;
 
     public TargetSequence() {
@@ -66,10 +69,24 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
         }
 
         makeTargetWindow();
+
+        startTime = System.nanoTime();
+        realTimePosition = 0;
     }
 
-    public void advance(double seconds) {
+    public void advance(/*double seconds*/) {
+        double lastRealTimePosition = realTimePosition;
+        realTimePosition = (System.nanoTime() - startTime) / 1000000000.0;
+        double realSeconds = realTimePosition - lastRealTimePosition;
+
+        double seconds = realSeconds;
+
         timePosition += seconds;
+
+//        Log.i(TAG, "timePosition: " + timePosition + " realTimePosition: " + realTimePosition + " diff: " + (realTimePosition - timePosition));
+//        Log.i(TAG, "seconds: " + seconds + " realSeconds: " + realSeconds);
+
+//        timePosition = realTimePosition;
 
         SequenceItem nextItem = getNextItem(windowIndex);
         if (nextItem == null) {
@@ -103,7 +120,6 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
             // stay .5 more seconds in window
             return target.getEndTime() < timePosition - 0.5;
         } else {
-            // no duration, also no need to keep in window
             return item.getStartTime() < timePosition - 0.5;
         }
     }

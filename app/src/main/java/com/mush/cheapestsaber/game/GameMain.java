@@ -83,7 +83,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
             onHit(target);
         }
 
-        targetSequence.advance(secondsPerFrame);
+        targetSequence.advance(/*secondsPerFrame*/);
     }
 
     public PointF getLeftPoint() {

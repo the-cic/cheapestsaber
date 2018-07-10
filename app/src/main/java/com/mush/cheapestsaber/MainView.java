@@ -2,7 +2,7 @@ package com.mush.cheapestsaber;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.Log;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,8 +17,12 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
     private static final long SECOND_IN_NANOS = 1000000000;
 
     private MainContent content;
-    private GameRender render;
     private long lastUpdateStartNanos;
+
+    private double lowFps;
+    private double hiFps;
+    private double avgFps;
+    private int fpsCount;
 
     public MainView(Context context) {
         super(context);
@@ -30,46 +34,35 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         setWillNotDraw(false);
 
         content = MainContent.get(context.getApplicationContext());
-        render = new GameRender();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-//        Log.i("view", "created");
-
         setSystemUiVisibility(SYSTEM_UI_FLAG_HIDE_NAVIGATION | SYSTEM_UI_FLAG_IMMERSIVE | SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         getSecondsSinceLastUpdate();
 
-        render.resize(getWidth(), getHeight());
-        content.getInput().resize(render.getInputArea());
+        content.resize(getWidth(), getHeight());
 
         invalidate();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-//        Log.i("view", "changed");
-
-        render.resize(width, height);
-        content.getInput().resize(render.getInputArea());
+        content.resize(width, height);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-//        Log.i("view", "destroyed");
+        // content.freeze()?
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        content.getInput().onTouchEvent(event);
+        content.onTouchEvent(event);
+
         super.onTouchEvent(event);
         return true;
-    }
-
-    private void update(double secondsPerFrame) {
-        content.getGame().processInput(content.getInput(), secondsPerFrame);
-        content.getGame().update(secondsPerFrame);
     }
 
     @Override
@@ -78,10 +71,11 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
         double secondsPerFrame = getSecondsSinceLastUpdate();
 
-        update(secondsPerFrame);
+        content.update(secondsPerFrame);
 
-        render.draw(canvas, content.getGame());
-        render.drawFps(canvas, secondsPerFrame);
+        content.draw(canvas);
+
+        drawFps(canvas, secondsPerFrame);
 
         invalidate();
     }
@@ -92,4 +86,30 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         lastUpdateStartNanos = now;
         return (double)nanosSinceLastUpdate / SECOND_IN_NANOS;
     }
+
+    public void drawFps(Canvas canvas, double secondsPerFrame) {
+        double fps = 1 / secondsPerFrame;
+        if (fpsCount == 0) {
+            lowFps = 100000;
+            hiFps = 0;
+        }
+        if (fps < lowFps) {
+            lowFps = fps;
+        }
+        if (fps > hiFps) {
+            hiFps = fps;
+        }
+        fpsCount++;
+        if (fpsCount > 30) {
+            fpsCount = 0;
+        }
+        avgFps = avgFps * 0.9 + fps * 0.1;
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xff00ff00);
+
+        canvas.drawText((int)avgFps + " " + (int)lowFps + " " + (int)hiFps, 10, 10, paint);
+    }
+
 }
