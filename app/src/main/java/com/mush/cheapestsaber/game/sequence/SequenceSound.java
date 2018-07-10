@@ -6,7 +6,7 @@ package com.mush.cheapestsaber.game.sequence;
 public class SequenceSound extends SequenceItem {
 
     private String name;
-    private double leadTime = 0.1;
+    private double leadTime = 0; //0.1;
 
     public SequenceSound(double delayTime) {
         super(delayTime);

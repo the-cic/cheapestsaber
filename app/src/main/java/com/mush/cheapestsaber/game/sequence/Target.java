@@ -13,6 +13,7 @@ public class Target extends SequenceItem {
     private double duration;
     private double endTime;
     private boolean hit;
+    private boolean miss;
 
     private int side;
     private Point direction;
@@ -29,6 +30,7 @@ public class Target extends SequenceItem {
     public void reset() {
         super.reset();
         this.hit = false;
+        this.miss = false;
         setCurrentTime(0);
     }
 
@@ -66,6 +68,10 @@ public class Target extends SequenceItem {
         hit = true;
     }
 
+    public void setMiss() {
+        miss = true;
+    }
+
     public Point getDirection() {
         return direction;
     }
@@ -76,5 +82,9 @@ public class Target extends SequenceItem {
 
     public boolean isHit() {
         return hit;
+    }
+
+    public boolean isMiss() {
+        return miss;
     }
 }

@@ -6,7 +6,6 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.graphics.Typeface;
 
 import com.mush.cheapestsaber.game.sequence.SequenceItem;
 import com.mush.cheapestsaber.game.sequence.Target;
@@ -28,7 +27,7 @@ public class GameRender {
     private Path targetArrowPath;
     private Path targetBoxPath;
 
-    private final float boxSizeToScreenFactor = 0.1f;
+    private final float boxSizeToScreenFactor = 0.2f;
 
     public GameRender() {
         paints = new PaintPalette();
@@ -79,10 +78,23 @@ public class GameRender {
         paints.toolPaint.setColor(paints.rightActiveTargetPaint.getColor());
         drawTool(canvas, game.getRightTool(), paints.toolPaint);
 
+        int size = 400;
+        float scale = (float)screenWidth / size;
+        canvas.save();
+        canvas.scale(scale, scale);
+
+        /*
         canvas.drawText("Hit", 10, 30, paints.scorePaint);
         canvas.drawText("" + game.getHitCount() + " / " + game.getTotalCount(), 10, 50, paints.scorePaint);
         canvas.drawText("Combo", 10, 80, paints.scorePaint);
         canvas.drawText("" + game.getComboLength() + " - Best: " +  game.getMaxComboLength(), 10, 100, paints.scorePaint);
+        */
+        paints.scorePaint.setTextSize(20);
+        canvas.drawText("COMBO", 50, 40, paints.scorePaint);
+        paints.scorePaint.setTextSize(30);
+        canvas.drawText(String.valueOf(game.getComboLength()), 50, 70, paints.scorePaint);
+
+        canvas.restore();
     }
 
     private void drawTool(Canvas canvas, Tool tool, Paint paint) {
@@ -115,8 +127,8 @@ public class GameRender {
     private void drawTarget(Canvas canvas, Target target, double windowDuration) {
         float boxSize = getBoxSize();
 
-        float x = target.xOffset * boxSize * 2;
-        float y = target.yOffset * boxSize * 2;
+        float x = target.xOffset * boxSize * 1;
+        float y = target.yOffset * boxSize * 1;
 
         int saveCount = canvas.save();
 
@@ -124,7 +136,7 @@ public class GameRender {
         float scale = (float) (1  / (1 + percent*2));
 
         canvas.scale(scale, scale);
-        canvas.translate(0, (float) (-percent * boxSize * 10));
+        canvas.translate(0, (float) (-percent * boxSize * 5));
 
         canvas.translate(x, y);
 
@@ -164,7 +176,9 @@ public class GameRender {
     private void drawTargetBox(Canvas canvas, Target target, float size, double percent) {
         Paint paint = paints.targetPaint;
         if (target.isHit()) {
-            paint.setColor(paints.hitObjectTargetPaint.getColor());
+            paint.setColor(paints.targetHitPaint.getColor());
+        } else if (target.isMiss()) {
+            paint.setColor(paints.targetMissedPaint.getColor());
         }
         else if (target.getSide() == Target.SIDE_LEFT) {
             paint.setColor(target.isActive() ? paints.leftActiveTargetPaint.getColor() : paints.leftTargetPaint.getColor());

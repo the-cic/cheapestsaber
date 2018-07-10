@@ -74,6 +74,7 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
     public void startMediaPlayerForSound(String soundName) {
         MediaPlayer mp = getMediaPlayerForSound(soundName);
         if (mp != null) {
+            mp.seekTo(0);
             mp.start();
         }
     }

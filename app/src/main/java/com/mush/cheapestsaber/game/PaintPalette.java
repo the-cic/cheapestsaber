@@ -1,7 +1,6 @@
 package com.mush.cheapestsaber.game;
 
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Typeface;
 
 /**
@@ -10,6 +9,7 @@ import android.graphics.Typeface;
 public class PaintPalette {
 
     public Paint scorePaint;
+    public Paint labelPaint;
     public Paint gridPaint;
     public Paint toolPaint;
     public Paint targetHilightPaint;
@@ -20,12 +20,14 @@ public class PaintPalette {
     public Paint rightTargetOutlinePaint;
     public Paint leftActiveTargetPaint;
     public Paint rightActiveTargetPaint;
-    public Paint hitObjectTargetPaint;
+    public Paint targetHitPaint;
+    public Paint targetMissedPaint;
     public Paint targetPaint;
     public Paint targetDestinationPaint;
 
     public PaintPalette() {
         scorePaint = makeFillPaint(0xffffffff);
+        labelPaint = makeFillPaint(0xffffffff);
         gridPaint = makeFillPaint(0xff888888);
         toolPaint = makeFillPaint(0xff888888);
         targetHilightPaint = makeFillPaint(0xffffffff);
@@ -39,11 +41,16 @@ public class PaintPalette {
         rightTargetOutlinePaint = makeFillPaint(0xff000080);
         leftActiveTargetPaint = makeFillPaint(0xffff8888);
         rightActiveTargetPaint = makeFillPaint(0xff8888ff);
-        hitObjectTargetPaint = makeFillPaint(0xff88ff88);
+        targetMissedPaint = makeFillPaint(0xff885511);
+        targetHitPaint = makeFillPaint(0xff88ff88);
 
         Typeface fpsTypeface = Typeface.create("sans-serif", Typeface.BOLD);
         scorePaint.setTextSize(20);
         scorePaint.setTypeface(fpsTypeface);
+        scorePaint.setTextAlign(Paint.Align.CENTER);
+
+        labelPaint.setTextSize(20);
+        labelPaint.setTypeface(fpsTypeface);
     }
 
     private Paint makeFillPaint(int color) {

@@ -24,6 +24,10 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     private static final String TAG = GameMain.class.getSimpleName();
 
+    public interface GameMainDelegate {
+        public void onGameFinished();
+    }
+
     private Context applicationContext;
 
     private PointF leftPoint;
@@ -39,7 +43,12 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     private int hitCount;
     private int totalCount;
 
+    private boolean paused = true;
+    private boolean soundEnabled = false;
+
     private SoundPlayer soundPlayer;
+
+    public GameMainDelegate delegate;
 
     public GameMain(Context appContext) {
         applicationContext = appContext;
@@ -63,14 +72,19 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         loader.parseInto(targetSequence);
     }
 
-    public void processInput(GameInput input, double secondsPerFrame) {
+    public void processInput(GameInput input) {
         leftPoint = input.getLeftPoint();
         rightPoint = input.getRightPoint();
-        leftTool.update(leftPoint, secondsPerFrame);
-        rightTool.update(rightPoint, secondsPerFrame);
     }
 
     public void update(double secondsPerFrame) {
+        if (paused) {
+            return;
+        }
+
+        leftTool.update(leftPoint, secondsPerFrame);
+        rightTool.update(rightPoint, secondsPerFrame);
+
         List<Target> removeTargets = new ArrayList<>();
         for (Target target : activeTargets) {
             Tool tool = getToolForTarget(target);
@@ -84,6 +98,10 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         }
 
         targetSequence.advance(/*secondsPerFrame*/);
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     public PointF getLeftPoint() {
@@ -137,6 +155,9 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     @Override
     public void onSequenceFinished() {
         Log.i(TAG, "finished");
+        if (delegate != null) {
+            delegate.onGameFinished();
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -171,7 +192,9 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     @Override
     public void onBecameActive(SequenceSound soundItem) {
 //        Log.i(TAG, "sound: " + soundItem.getName());
-        soundPlayer.play(soundItem.getName());
+        if (soundEnabled) {
+            soundPlayer.play(soundItem.getName());
+        }
     }
 
     private Tool getToolForTarget(Target target) {
@@ -200,6 +223,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
 
     private void onMiss(Target target) {
 //        Log.i(TAG, "missed target");
+        target.setMiss();
         totalCount++;
         comboLength = 0;
     }
