@@ -1,26 +1,25 @@
 package com.mush.cheapestsaber.select;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
+import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.game.PaintPalette;
 
 
 /**
  * Created by mush on 10/07/2018.
  */
-public class SelectRender {
+public class SelectRender extends StateRender {
 
-    private int screenWidth;
-    private int screenHeight;
     private PaintPalette paints;
+    private SelectMain select;
 
-    public SelectRender() {
+    public SelectRender(SelectMain main) {
         paints = new PaintPalette();
-
+        select = main;
     }
 
-    public void draw(Canvas canvas, SelectMain score) {
+    public void draw(Canvas canvas) {
         int width = 400;
         int height =  300;
         float scale = (float)screenWidth / width;
@@ -37,11 +36,6 @@ public class SelectRender {
         canvas.drawText("Start", 50, 200, paints.labelPaint);
 
         canvas.restore();
-    }
-
-    public void resize(int width, int height) {
-        screenWidth = width;
-        screenHeight = height;
     }
 
 }

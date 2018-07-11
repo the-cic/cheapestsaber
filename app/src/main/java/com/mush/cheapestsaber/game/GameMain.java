@@ -6,6 +6,7 @@ import android.graphics.PointF;
 import android.util.Log;
 
 import com.mush.cheapestsaber.R;
+import com.mush.cheapestsaber.common.StateMain;
 import com.mush.cheapestsaber.game.sequence.SequenceItem;
 import com.mush.cheapestsaber.game.sequence.SequenceLoader;
 import com.mush.cheapestsaber.game.sequence.SequenceSound;
@@ -20,7 +21,7 @@ import java.util.Set;
 /**
  * Created by mush on 25/06/2018.
  */
-public class GameMain implements TargetSequence.SequenceDelegate {
+public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
 
     private static final String TAG = GameMain.class.getSimpleName();
 
@@ -47,13 +48,15 @@ public class GameMain implements TargetSequence.SequenceDelegate {
     private boolean soundEnabled = false;
 
     private SoundPlayer soundPlayer;
+    private GameInput input;
 
     public GameMainDelegate delegate;
 
-    public GameMain(Context appContext) {
+    public GameMain(Context appContext, GameInput gameInput) {
         applicationContext = appContext;
 
         soundPlayer = new SoundPlayer(appContext);
+        input = gameInput;
 
         targetSequence = new TargetSequence();
         targetSequence.delegate = this;
@@ -72,7 +75,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         loader.parseInto(targetSequence);
     }
 
-    public void processInput(GameInput input) {
+    public void processInput() {
         leftPoint = input.getLeftPoint();
         rightPoint = input.getRightPoint();
     }
@@ -144,7 +147,7 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         return maxComboLength;
     }
 
-    public void reset() {
+    private void reset() {
         targetSequence.reset();
         totalCount = 0;
         hitCount = 0;
@@ -158,16 +161,6 @@ public class GameMain implements TargetSequence.SequenceDelegate {
         if (delegate != null) {
             delegate.onGameFinished();
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-                reset();
-            }
-        }).start();
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.game.sequence.SequenceItem;
 import com.mush.cheapestsaber.game.sequence.Target;
 
@@ -15,27 +16,28 @@ import java.util.List;
 /**
  * Created by mush on 25/06/2018.
  */
-public class GameRender {
+public class GameRender extends StateRender {
 
-    private int screenWidth;
-    private int screenHeight;
     private RectF inputArea;
     private RectF playArea;
 
     private PaintPalette paints;
+
+    private GameMain game;
 
     private Path targetArrowPath;
     private Path targetBoxPath;
 
     private final float boxSizeToScreenFactor = 0.2f;
 
-    public GameRender() {
+    public GameRender(GameMain main) {
         paints = new PaintPalette();
+        game = main;
 
         makeTargetArrowPath(100);
     }
 
-    public void draw(Canvas canvas, GameMain game) {
+    public void draw(Canvas canvas) {
         canvas.drawLine(0, inputArea.top, inputArea.width(), inputArea.top, paints.gridPaint);
         canvas.drawLine(0, inputArea.bottom, inputArea.width(), inputArea.bottom, paints.gridPaint);
         canvas.drawLine(inputArea.width() * 0.5f, inputArea.top, inputArea.width() * 0.5f, inputArea.bottom, paints.gridPaint);
@@ -191,7 +193,7 @@ public class GameRender {
 
         canvas.drawPath(targetBoxPath, paint);
 
-        if (!target.isHit()) {
+        if (!target.isHit() && !target.isActive() && !target.isMiss()) {
             paint = paints.targetDestinationPaint;
             if (target.getSide() == Target.SIDE_LEFT) {
                 paint.setColor(paints.leftTargetOutlinePaint.getColor());
@@ -199,7 +201,7 @@ public class GameRender {
                 paint.setColor(paints.rightTargetOutlinePaint.getColor());
             }
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(2);
+            paint.setStrokeWidth(4);
             canvas.drawPath(targetBoxPath, paint);
         }
 
@@ -271,8 +273,8 @@ public class GameRender {
     }
 
     public void resize(int width, int height) {
-        screenWidth = width;
-        screenHeight = height;
+        super.resize(width, height);
+
         // 2 x 1 box at the bottom
         inputArea = new RectF(0, height * 0.9f - width / 2, width, height * 0.9f);
         playArea = new RectF(0, 0, width, height * 1.0f - width / 2);

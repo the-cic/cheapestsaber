@@ -2,13 +2,14 @@ package com.mush.cheapestsaber.game;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
+
+import com.mush.cheapestsaber.common.StateInput;
 
 /**
  * Created by mush on 25/06/2018.
  */
-public class GameInput {
+public class GameInput implements StateInput {
 
     private PointF leftPoint;
     private PointF rightPoint;

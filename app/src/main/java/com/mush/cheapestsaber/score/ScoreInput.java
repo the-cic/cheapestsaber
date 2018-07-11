@@ -1,9 +1,13 @@
 package com.mush.cheapestsaber.score;
 
-import android.view.MotionEvent; /**
+import android.view.MotionEvent;
+
+import com.mush.cheapestsaber.common.StateInput;
+
+/**
  * Created by mush on 10/07/2018.
  */
-public class ScoreInput {
+public class ScoreInput implements StateInput {
 
     private  boolean pressed = false;
     private boolean dePressed = false;

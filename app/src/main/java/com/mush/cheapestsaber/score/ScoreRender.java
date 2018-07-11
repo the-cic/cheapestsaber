@@ -2,24 +2,24 @@ package com.mush.cheapestsaber.score;
 
 import android.graphics.Canvas;
 
+import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.game.PaintPalette;
 
 
 /**
  * Created by mush on 10/07/2018.
  */
-public class ScoreRender {
+public class ScoreRender extends StateRender {
 
-    private int screenWidth;
-    private int screenHeight;
     private PaintPalette paints;
+    private ScoreMain score;
 
-
-    public ScoreRender() {
+    public ScoreRender(ScoreMain main) {
         paints = new PaintPalette();
+        score = main;
     }
 
-    public void draw(Canvas canvas, ScoreMain score) {
+    public void draw(Canvas canvas) {
         int width = 300;
         int height =  200;
         float scale = (float)screenWidth / width;
@@ -40,11 +40,6 @@ public class ScoreRender {
         canvas.drawText("OK", 130, 160, paints.labelPaint);
 
         canvas.restore();
-    }
-
-    public void resize(int width, int height) {
-        screenWidth = width;
-        screenHeight = height;
     }
 
 }

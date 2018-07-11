@@ -5,6 +5,9 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.mush.cheapestsaber.common.StateInput;
+import com.mush.cheapestsaber.common.StateMain;
+import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.game.GameInput;
 import com.mush.cheapestsaber.game.GameMain;
 import com.mush.cheapestsaber.game.GameRender;
@@ -32,17 +35,13 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
 
     private State state;
 
-    private GameInput gameInput;
     private GameMain game;
-    private GameRender gameRender;
-
-    private SelectInput selectInput;
     private SelectMain select;
-    private SelectRender selectRender;
-
-    private ScoreInput scoreInput;
     private ScoreMain score;
-    private ScoreRender scoreRender;
+
+    private StateInput input;
+    private StateMain main;
+    private StateRender render;
 
     private int screenWidth = 100;
     private int screenHeight = 100;
@@ -97,42 +96,45 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
     }
 
     private void createSelect() {
-        select = new SelectMain();
+        input = new SelectInput();
+        select = new SelectMain((SelectInput) input);
         select.delegate = this;
-        selectInput = new SelectInput();
-        selectRender = new SelectRender();
+
+        render = new SelectRender(select);
+        main = select;
+
         applyScreenSize();
     }
 
     private void createGame() {
-        gameInput = new GameInput();
-        game = new GameMain(applicationContext);
+        input = new GameInput();
+        game = new GameMain(applicationContext, (GameInput) input);
         game.delegate = this;
-        gameRender = new GameRender();
+
+        render = new GameRender(game);
+        main = game;
+
         applyScreenSize();
         game.setPaused(false);
     }
 
     private void createScore() {
-        score = new ScoreMain(game);
+        input = new ScoreInput();
+        score = new ScoreMain(game, (ScoreInput) input);
         score.delegate = this;
 
-        scoreInput = new ScoreInput();
-        scoreRender = new ScoreRender();
+        render = new ScoreRender(score);
+        main = score;
+
         applyScreenSize();
     }
 
     private void applyScreenSize() {
+        render.resize(screenWidth, screenHeight);
+
         switch (state) {
-            case SELECT:
-                selectRender.resize(screenWidth, screenHeight);
-                break;
             case GAME:
-                gameRender.resize(screenWidth, screenHeight);
-                gameInput.resize(gameRender.getInputArea());
-                break;
-            case SCORE:
-                scoreRender.resize(screenWidth, screenHeight);
+                ((GameInput)input).resize(((GameRender)render).getInputArea());
                 break;
         }
     }
@@ -144,48 +146,16 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
     }
 
     public void update(double secondsPerFrame) {
-        switch (state) {
-            case SELECT:
-                select.processInput(selectInput);
-                select.update(secondsPerFrame);
-                break;
-            case GAME:
-                game.processInput(gameInput);
-                game.update(secondsPerFrame);
-                break;
-            case SCORE:
-                score.processInput(scoreInput);
-                score.update(secondsPerFrame);
-                break;
-        }
+        main.processInput();
+        main.update(secondsPerFrame);
     }
 
     public void onTouchEvent(MotionEvent event) {
-        switch (state) {
-            case SELECT:
-                selectInput.onTouchEvent(event);
-                break;
-            case GAME:
-                gameInput.onTouchEvent(event);
-                break;
-            case SCORE:
-                scoreInput.onTouchEvent(event);
-                break;
-        }
+        input.onTouchEvent(event);
     }
 
     public void draw(Canvas canvas) {
-        switch (state) {
-            case SELECT:
-                selectRender.draw(canvas, select);
-                break;
-            case GAME:
-                gameRender.draw(canvas, game);
-                break;
-            case SCORE:
-                scoreRender.draw(canvas, score);
-                break;
-        }
+        render.draw(canvas);
     }
 
     @Override

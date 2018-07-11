@@ -1,11 +1,12 @@
 package com.mush.cheapestsaber.score;
 
+import com.mush.cheapestsaber.common.StateMain;
 import com.mush.cheapestsaber.game.GameMain;
 
 /**
  * Created by mush on 10/07/2018.
  */
-public class ScoreMain {
+public class ScoreMain implements StateMain {
 
     public interface ScoreMainDelegate {
         public void onScoreFinished();
@@ -22,14 +23,17 @@ public class ScoreMain {
     public ScoreMainDelegate delegate;
 
     private boolean finished = false;
+    private ScoreInput input;
 
-    public ScoreMain(GameMain game) {
+    public ScoreMain(GameMain game, ScoreInput scoreInput) {
         showDuration = 0;
 
         comboLength = game.getComboLength();
         maxComboLength = game.getMaxComboLength();
         hitCount = game.getHitCount();
         totalCount = game.getTotalCount();
+
+        input = scoreInput;
     }
 
     public void update(double seconds) {
@@ -42,7 +46,7 @@ public class ScoreMain {
         }
     }
 
-    public void processInput(ScoreInput input) {
+    public void processInput() {
         if (showDuration < minShowDuration) {
             return;
         }
