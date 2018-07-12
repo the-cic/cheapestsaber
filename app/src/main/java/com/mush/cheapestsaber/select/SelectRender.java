@@ -1,9 +1,12 @@
 package com.mush.cheapestsaber.select;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
+import com.mush.cheapestsaber.common.ColorPalette;
 import com.mush.cheapestsaber.common.StateRender;
-import com.mush.cheapestsaber.game.PaintPalette;
+import com.mush.cheapestsaber.common.PaintPalette;
 
 
 /**
@@ -12,30 +15,31 @@ import com.mush.cheapestsaber.game.PaintPalette;
 public class SelectRender extends StateRender {
 
     private PaintPalette paints;
-    private SelectMain select;
+    private SelectMain main;
+    private Paint transitionPaint;
 
-    public SelectRender(SelectMain main) {
+    public SelectRender(SelectMain selectMain) {
         paints = new PaintPalette();
-        select = main;
+        this.main = selectMain;
+        transitionPaint = new Paint();
+        transitionPaint.setStyle(Paint.Style.FILL);
     }
 
     public void draw(Canvas canvas) {
-        int width = 400;
-        int height =  300;
-        float scale = (float)screenWidth / width;
-        scale = scale > 0 ? scale : 1;
-        int fullHeight = (int) (screenHeight / scale);
-        int offset = (fullHeight - height) / 2;
-        offset = offset > 0 ? offset : 0;
+        main.panel.draw(canvas);
+        main.startButton.draw(canvas);
 
-        canvas.save();
-        canvas.scale(scale, scale);
-        canvas.translate(0, offset);
-
-        canvas.drawRect(10, 10, 390, 290, paints.gridPaint);
-        canvas.drawText("Start", 50, 200, paints.labelPaint);
-
-        canvas.restore();
+        if (main.transition > 0) {
+            transitionPaint.setColor(ColorPalette.fade(ColorPalette.BACKGROUND, main.transition));
+            canvas.drawRect(main.panel.drawArea, transitionPaint);
+        }
     }
 
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        main.panel.resize(width, height);
+        main.startButton.resize(width, height);
+    }
 }

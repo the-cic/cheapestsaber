@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.mush.cheapestsaber.common.PaintPalette;
 import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.game.sequence.SequenceItem;
 import com.mush.cheapestsaber.game.sequence.Target;

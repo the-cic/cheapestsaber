@@ -1,7 +1,9 @@
-package com.mush.cheapestsaber.game;
+package com.mush.cheapestsaber.common;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import static com.mush.cheapestsaber.common.ColorPalette.opaque;
 
 /**
  * Created by mush on 10/07/2018.
@@ -35,14 +37,15 @@ public class PaintPalette {
         targetStemPaint = makeFillPaint(0xff888888);
         targetPaint = makeFillPaint(0xffffff00);
         targetDestinationPaint = makeFillPaint(0xffffff00);
-        leftTargetPaint = makeFillPaint(0xffcf0000);
-        rightTargetPaint = makeFillPaint(0xff0000cf);
-        leftTargetOutlinePaint = makeFillPaint(0xff800000);
-        rightTargetOutlinePaint = makeFillPaint(0xff000080);
-        leftActiveTargetPaint = makeFillPaint(0xffff8888);
-        rightActiveTargetPaint = makeFillPaint(0xff8888ff);
-        targetMissedPaint = makeFillPaint(0xff885511);
-        targetHitPaint = makeFillPaint(0xff88ff88);
+
+        leftTargetPaint = makeFillPaint(opaque(ColorPalette.TARGET_LEFT));
+        rightTargetPaint = makeFillPaint(opaque(ColorPalette.TARGET_RIGHT));
+        leftTargetOutlinePaint = makeFillPaint(opaque(ColorPalette.TARGET_OUTLINE_LEFT));
+        rightTargetOutlinePaint = makeFillPaint(opaque(ColorPalette.TARGET_OUTLINE_RIGHT));
+        leftActiveTargetPaint = makeFillPaint(opaque(ColorPalette.TARGET_ACTIVE_LEFT));
+        rightActiveTargetPaint = makeFillPaint(opaque(ColorPalette.TARGET_ACTIVE_RIGHT));
+        targetMissedPaint = makeFillPaint(opaque(ColorPalette.TARGET_MISS));
+        targetHitPaint = makeFillPaint(opaque(ColorPalette.TARGET_HIT));
 
         Typeface fpsTypeface = Typeface.create("sans-serif", Typeface.BOLD);
         scorePaint.setTextSize(20);

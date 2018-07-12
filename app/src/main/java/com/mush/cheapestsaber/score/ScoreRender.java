@@ -3,7 +3,7 @@ package com.mush.cheapestsaber.score;
 import android.graphics.Canvas;
 
 import com.mush.cheapestsaber.common.StateRender;
-import com.mush.cheapestsaber.game.PaintPalette;
+import com.mush.cheapestsaber.common.PaintPalette;
 
 
 /**
