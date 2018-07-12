@@ -9,6 +9,7 @@ import com.mush.cheapestsaber.common.StateInput;
  * Created by mush on 10/07/2018.
  */
 public class SelectInput implements StateInput, Button.ButtonDelegate {
+
     private boolean pressed;
 
     public SelectMain main;

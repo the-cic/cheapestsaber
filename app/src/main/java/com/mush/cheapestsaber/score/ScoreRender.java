@@ -1,7 +1,9 @@
 package com.mush.cheapestsaber.score;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
+import com.mush.cheapestsaber.common.ColorPalette;
 import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.common.PaintPalette;
 
@@ -12,34 +14,38 @@ import com.mush.cheapestsaber.common.PaintPalette;
 public class ScoreRender extends StateRender {
 
     private PaintPalette paints;
-    private ScoreMain score;
+    private ScoreMain main;
+    private Paint transitionPaint;
 
-    public ScoreRender(ScoreMain main) {
+    public ScoreRender(ScoreMain score) {
         paints = new PaintPalette();
-        score = main;
+        this.main = score;
+        transitionPaint = new Paint();
+        transitionPaint.setStyle(Paint.Style.FILL);
     }
 
     public void draw(Canvas canvas) {
-        int width = 300;
-        int height =  200;
-        float scale = (float)screenWidth / width;
-        scale = scale > 0 ? scale : 1;
-        int fullHeight = (int) (screenHeight / scale);
-        int offset = (fullHeight - height) / 2;
-        offset = offset > 0 ? offset : 0;
+        main.panel.draw(canvas);
+        main.okButton.draw(canvas);
+        main.hitsLabel.draw(canvas);
+        main.missesLabel.draw(canvas);
+        main.comboLabel.draw(canvas);
 
-        canvas.save();
-        canvas.scale(scale, scale);
-        canvas.translate(0, offset);
+        if (main.transition > 0) {
+            transitionPaint.setColor(ColorPalette.fade(ColorPalette.BACKGROUND, main.transition));
+            canvas.drawRect(main.panel.getDrawArea(), transitionPaint);
+        }
+    }
 
-        canvas.drawRoundRect(10, 10, 290, 190, 20, 20, paints.gridPaint);
-        canvas.drawText("Hit: " + score.hitCount, 50, 50, paints.labelPaint);
-        canvas.drawText("Missed: " + (score.totalCount - score.hitCount), 50, 80, paints.labelPaint);
-        canvas.drawText("Best combo: " + score.maxComboLength, 50, 110, paints.labelPaint);
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
 
-        canvas.drawText("OK", 130, 160, paints.labelPaint);
-
-        canvas.restore();
+        main.panel.resize(width, height);
+        main.okButton.resize(width, height);
+        main.hitsLabel.resize(width, height);
+        main.missesLabel.resize(width, height);
+        main.comboLabel.resize(width, height);
     }
 
 }

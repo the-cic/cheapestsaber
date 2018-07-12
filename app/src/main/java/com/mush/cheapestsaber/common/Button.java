@@ -3,7 +3,6 @@ package com.mush.cheapestsaber.common;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import static com.mush.cheapestsaber.common.ColorPalette.BUTTON;
@@ -21,65 +20,52 @@ public class Button extends Panel {
         public void onButtonClicked(Button button);
     }
 
-    private Paint textPaint;
-    private float textSize;
-    private float drawTextSize;
     private boolean pressed;
+
+    private Label label;
 
     private int color;
     private int pressedColor;
     private int textColor;
     private int disabledTextColor;
 
-    public String text;
     public ButtonDelegate delegate;
     public boolean enabled = true;
 
-    public Button(RectF rect, String text) {
-        super(rect);
-        this.text = text;
+    public Button(RectF rect, float corner, String text) {
+        super(rect, corner);
+
+        label = new Label(rect, text);
+        label.setAlign(Paint.Align.CENTER);
 
         color = opaque(BUTTON);
         pressedColor = opaque(BUTTON_PRESSED);
         textColor = opaque(TEXT);
         disabledTextColor = opaque(TEXT_DISABLED);
 
-        paint.setColor(color);
-
-        textPaint = new Paint();
-        textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setColor(textColor);
-        Typeface typeface = Typeface.create("sans-serif", Typeface.BOLD);
-        textPaint.setTypeface(typeface);
-        textPaint.setTextAlign(Paint.Align.CENTER);
-        textSize = 7f / 100;
-
         pressed = false;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        paint.setColor(pressed ? pressedColor : color);
+        super.setPanelColor(pressed ? pressedColor : color);
         super.draw(canvas);
 
-        textPaint.setColor(enabled ? textColor : disabledTextColor);
-        textPaint.setTextSize(drawTextSize);
-        float textHeight = textPaint.descent() + textPaint.ascent();
-
-        canvas.drawText(text, drawArea.centerX(), drawArea.centerY() - textHeight / 2, textPaint);
+        label.setColor(enabled ? textColor : disabledTextColor);
+        label.draw(canvas);
     }
 
     @Override
     protected void resize(int x0, int y0, int dim) {
         super.resize(x0, y0, dim);
-        drawTextSize = textSize * dim;
+        label.resize(x0, y0, dim);
     }
 
     public boolean onTouchEvent(MotionEvent event) {
         if (!enabled) {
             return false;
         }
-        if (drawArea.contains(event.getX(), event.getY())) {
+        if (getDrawArea().contains(event.getX(), event.getY())) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 pressed = true;
             }

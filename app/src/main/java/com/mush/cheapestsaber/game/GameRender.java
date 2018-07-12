@@ -63,13 +63,13 @@ public class GameRender extends StateRender {
 //        PointF rightPoint = game.getRightPoint();
 
 //        if (leftPoint != null) {
-//            paint.setColor(0x5fff0000);
-//            canvas.drawCircle((float) (screenWidth * (0.5 + leftPoint.x /2)), (float) (screenWidth * (0.5 + leftPoint.y / 2)), 2.5f, paint);
+//            panelPaint.setColor(0x5fff0000);
+//            canvas.drawCircle((float) (screenWidth * (0.5 + leftPoint.x /2)), (float) (screenWidth * (0.5 + leftPoint.y / 2)), 2.5f, panelPaint);
 //        }
 //
 //        if (rightPoint != null) {
-//            paint.setColor(0x5f0000ff);
-//            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 2.5f, paint);
+//            panelPaint.setColor(0x5f0000ff);
+//            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 2.5f, panelPaint);
 //        }
 
         paints.toolPaint.setStyle(Paint.Style.STROKE);
@@ -115,12 +115,12 @@ public class GameRender extends StateRender {
         float sX = (float) (screenWidth * (0.5 + start.x /2));
         float sY = (float) (screenWidth * (0.5 + start.y / 2));
 
-//        canvas.drawCircle(pX, pY, 10, paint);
-//        canvas.drawRect(dpX - 10, dpY - 10, dpX + 10, dpY + 10, paint);
+//        canvas.drawCircle(pX, pY, 10, panelPaint);
+//        canvas.drawRect(dpX - 10, dpY - 10, dpX + 10, dpY + 10, panelPaint);
         canvas.drawLine(dpX, dpY, pX, pY, paint);
-//        canvas.drawRect(sX - 10, sY - 10, sX + 10, sY + 10, paint);
+//        canvas.drawRect(sX - 10, sY - 10, sX + 10, sY + 10, panelPaint);
 
-//        canvas.drawLine(pX, pY, pX + direction.x * 100, pY + direction.y *100, paint);
+//        canvas.drawLine(pX, pY, pX + direction.x * 100, pY + direction.y *100, panelPaint);
     }
 
     private float getBoxSize() {
