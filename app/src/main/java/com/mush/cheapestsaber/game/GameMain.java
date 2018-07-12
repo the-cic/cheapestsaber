@@ -3,9 +3,12 @@ package com.mush.cheapestsaber.game;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.mush.cheapestsaber.R;
+import com.mush.cheapestsaber.common.Button;
+import com.mush.cheapestsaber.common.Frame;
 import com.mush.cheapestsaber.common.StateMain;
 import com.mush.cheapestsaber.game.sequence.SequenceItem;
 import com.mush.cheapestsaber.game.sequence.SequenceLoader;
@@ -49,6 +52,8 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
 
     private SoundPlayer soundPlayer;
     private GameInput input;
+    public Button quitButton;
+    public boolean quit = false;
 
     public GameMainDelegate delegate;
 
@@ -57,6 +62,7 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
 
         soundPlayer = new SoundPlayer(appContext);
         input = gameInput;
+        input.main = this;
 
         targetSequence = new TargetSequence();
         targetSequence.delegate = this;
@@ -67,6 +73,10 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
         leftTool = new Tool();
         rightTool = new Tool();
         activeTargets = new HashSet<>();
+
+        quitButton = new Button(new RectF(0.9f, 0.0f, 1f, 0.05f), 0.2f, "Quit");
+        quitButton.setTextSize(0.03f);
+        quitButton.frameAlign = Frame.FrameAlign.TOP;
     }
 
     private void createSequence() {
@@ -78,9 +88,18 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
     public void processInput() {
         leftPoint = input.getLeftPoint();
         rightPoint = input.getRightPoint();
+
+        if (input.getWasQuitPressed()) {
+            quit = true;
+        }
     }
 
     public void update(double secondsPerFrame) {
+        if (quit) {
+            onSequenceFinished();
+            quit = false;
+        }
+
         if (paused) {
             return;
         }

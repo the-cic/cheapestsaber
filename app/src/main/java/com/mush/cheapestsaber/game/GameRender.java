@@ -98,6 +98,8 @@ public class GameRender extends StateRender {
         canvas.drawText(String.valueOf(game.getComboLength()), 50, 70, paints.scorePaint);
 
         canvas.restore();
+
+        game.quitButton.draw(canvas);
     }
 
     private void drawTool(Canvas canvas, Tool tool, Paint paint) {
@@ -282,6 +284,8 @@ public class GameRender extends StateRender {
 
         makeTargetArrowPath(getBoxSize());
         makeTargetBoxPath(getBoxSize());
+
+        game.quitButton.resize(width, height);
     }
 
     public RectF getInputArea() {

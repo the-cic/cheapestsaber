@@ -46,6 +46,10 @@ public class Button extends Panel {
         pressed = false;
     }
 
+    public void setTextSize(float size) {
+        label.textSize = size;
+    }
+
     @Override
     public void draw(Canvas canvas) {
         super.setPanelColor(pressed ? pressedColor : color);

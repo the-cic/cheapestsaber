@@ -4,12 +4,13 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
+import com.mush.cheapestsaber.common.Button;
 import com.mush.cheapestsaber.common.StateInput;
 
 /**
  * Created by mush on 25/06/2018.
  */
-public class GameInput implements StateInput {
+public class GameInput implements StateInput, Button.ButtonDelegate {
 
     private PointF leftPoint;
     private PointF rightPoint;
@@ -18,12 +19,20 @@ public class GameInput implements StateInput {
 
     private RectF inputArea;
 
+    public GameMain main;
+    private boolean quitPressed = false;
+
     public GameInput() {
         leftPoint = new PointF();
         rightPoint = new PointF();
     }
 
     public void onTouchEvent(MotionEvent event) {
+        if (main.quitButton.onTouchEvent(event)) {
+            quitPressed = true;
+            return;
+        }
+
         if (!inputArea.contains(event.getX(), event.getY())) {
             return;
         }
@@ -80,5 +89,18 @@ public class GameInput implements StateInput {
 
     public PointF getRightPoint() {
         return rightPointValid ? rightPoint : null;
+    }
+
+    public boolean getWasQuitPressed() {
+        boolean wasPressed = quitPressed;
+        quitPressed = false;
+        return wasPressed;
+    }
+
+    @Override
+    public void onButtonClicked(Button button) {
+        if (button == main.quitButton) {
+            quitPressed = true;
+        }
     }
 }
