@@ -1,4 +1,4 @@
-// 100 Lidl coupons, Hard
+// 100 Lidl coupons, Normal
 
 bpm 105;lpb 4
 
@@ -190,35 +190,35 @@ start
 ;
 ;
 ;
-RV
 ;
 ;
 ;
-@play 8Transition2; LV
+;
+@play 8Transition2; R>
 ;
 ;
 ;
-RV
+;
 ;
 ;
 ;
 @play 8Transition1; LV; // 7
 ;
-RV
 ;
-L^
 ;
-R^
-;
-@play 8Transition3; LV
-;
-RV
-;
-L^
+; RV
 ;
 ;
 ;
-@play 8Beat; LV; // 8
+@play 8Transition3; L^
+;
+;
+;
+; R^
+;
+;
+;
+@play 8Beat; L<; // 8
 ;
 ;
 ;
@@ -228,89 +228,89 @@ L^
 ;
 @play 8BeatB; LV
 ;
-R<
+;
 ;
 ; R>
 ;
-L^
+;
 ;
 @play 8Beat; LV; // 9
 ;
 ;
 ;
-; R>
+; RV
 ;
 ;
 ;
 @play 8BeatEnd; L<
 ;
-RV
-;
-R^
 ;
 ;
-;
-@play 8Beat; L<; // 10
+; R>
 ;
 ;
 ;
-R>; //
+@play 8Beat; LV; // 10
 ;
 ;
 ;
-@play 8BeatB; LV; //
+; R>
 ;
-R<;
 ;
-R>; //
 ;
-L^;
+@play 8BeatB; L^; //
+;
+;
+;
+; R>
+;
+;
 ;
 @play 8Beat; LV; // 11
 ;
 ;
 ;
-R>; //
+; RV
 ;
 ;
 ;
 @play 8BeatEnd; L<; //
 ;
-RV;
-;
-R^; //
 ;
 ;
-;
-@play 8Beat; L<; // 12
+; R>
 ;
 ;
 ;
-R>; //
+@play 8Beat; LV; // 12
 ;
 ;
 ;
-@play 8BeatB; LV; //
+; R>
 ;
-R<;
 ;
-R>; //
 ;
-L^;
+@play 8BeatB; L<; //
+;
+;
+;
+; R>
+;
+;
 ;
 @play 8Beat; LV; // 13
 ;
 ;
 ;
-R>; //
+; RV
 ;
 ;
 ;
 @play 8BeatEnd; L<; //
 ;
-RV;
 ;
-R^; //
+;
+; R>
 ;
 ;
 ;
@@ -318,31 +318,31 @@ R^; //
 ;
 ;
 ;
-R> ; //
+; RV
 ;
 ;
 ;
 @play 8BeatB; LV; //
 ;
-R<;
 ;
-R>; //
 ;
-L^;
-;
-@play 8Beat; LV; // 15
+; R>
 ;
 ;
 ;
-R> ; //
+@play 8Beat; L^; // 15
+;
+;
+;
+; RV
 ;
 ;
 ;
 @play 8BeatEnd; L<; //
 ;
-RV;
 ;
-R^; //
+;
+; R>
 ;
 ;
 ;

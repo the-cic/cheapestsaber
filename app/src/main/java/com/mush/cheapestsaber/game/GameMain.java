@@ -48,17 +48,19 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
     private int totalCount;
 
     private boolean paused = true;
-    private boolean soundEnabled = false;
+    private boolean soundEnabled = true;
 
     private SoundPlayer soundPlayer;
     private GameInput input;
     public Button quitButton;
     public boolean quit = false;
+    private Levels.Level level;
 
     public GameMainDelegate delegate;
 
-    public GameMain(Context appContext, GameInput gameInput) {
+    public GameMain(Context appContext, GameInput gameInput, Levels.Level gameLevel) {
         applicationContext = appContext;
+        level = gameLevel;
 
         soundPlayer = new SoundPlayer(appContext);
         input = gameInput;
@@ -77,12 +79,19 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
         quitButton = new Button(new RectF(0.9f, 0.0f, 1f, 0.05f), 0.2f, "Quit");
         quitButton.setTextSize(0.03f);
         quitButton.frameAlign = Frame.FrameAlign.TOP;
+        quitButton.action = "quit";
+        quitButton.delegate = input;
     }
 
     private void createSequence() {
-        SequenceLoader loader = new SequenceLoader(applicationContext, R.raw.sequence2);
+        SequenceLoader loader = new SequenceLoader(applicationContext, level.fileName);
 
         loader.parseInto(targetSequence);
+    }
+
+    public void release() {
+        soundPlayer.release();
+        soundPlayer = null;
     }
 
     public void processInput() {
@@ -164,6 +173,10 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
 
     public int getMaxComboLength() {
         return maxComboLength;
+    }
+
+    public Levels.Level getLevel() {
+        return level;
     }
 
     private void reset() {

@@ -21,12 +21,12 @@ public class ScoreInput implements StateInput, Button.ButtonDelegate {
     }
 
     public void onTouchEvent(MotionEvent event) {
-        main.okButton.onTouchEvent(event);
+        main.uiElements.onTouchEvent(event);
     }
 
     @Override
-    public void onButtonClicked(Button button) {
-        if (button == main.okButton) {
+    public void onButtonClicked(Button button, String action) {
+        if ("ok".equals(action)) {
             pressed = true;
         }
     }

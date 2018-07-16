@@ -1,7 +1,9 @@
 package com.mush.cheapestsaber.game;
 
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.util.Log;
 
 import com.mush.cheapestsaber.R;
@@ -18,75 +20,51 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
 
     private static final String TAG = SoundPlayer.class.getSimpleName();
 
-    private final static int MAX_CHANNELS_PER_SOUND = 5;
-    private Map<String, Integer> soundMap;
-    private Map<String, List<MediaPlayer>> voiceMap;
+    SoundPool pool;
 
     private Context applicationContext;
+
+    private int soundId1;
+    private int soundId2;
+    private int soundId3;
+    private int soundId4;
+    private int soundId5;
+
+    private Map<String, Integer> soundMap;
 
     public SoundPlayer(Context appContext) {
         this.applicationContext = appContext;
 
-        voiceMap = new HashMap<>();
+        SoundPool.Builder builder = new SoundPool.Builder();
+        builder.setMaxStreams(7);
+        builder.setAudioAttributes(new AudioAttributes.Builder().setFlags(AudioAttributes.USAGE_GAME).build());
+        pool = new SoundPool.Builder().build();
+
+        soundId1 = pool.load(appContext,  R.raw.drum1, 1);
+        soundId2 = pool.load(appContext,  R.raw.drum2, 1);
+        soundId3 = pool.load(appContext,  R.raw.drum3, 1);
+        soundId4 = pool.load(appContext,  R.raw.drum4, 1);
+        soundId5 = pool.load(appContext,  R.raw.drumlow1, 1);
 
         soundMap = new HashMap<>();
-        soundMap.put("Drum1", R.raw.drum1);
-        soundMap.put("Drum2", R.raw.drum2);
-        soundMap.put("Drum3", R.raw.drum3);
-        soundMap.put("Drum4", R.raw.drum4);
+        soundMap.put("Drum1", soundId1);
+        soundMap.put("Drum2", soundId2);
+        soundMap.put("Drum3", soundId3);
+        soundMap.put("Drum4", soundId4);
+        soundMap.put("Boom1", soundId5);
     }
 
     public void play(String soundName) {
 //        Log.i(TAG, "play " + soundName);
-        startMediaPlayerForSound(soundName);
-    }
-
-    public MediaPlayer getMediaPlayerForSound(String name) {
-        Integer resId = soundMap.get(name);
-        if (resId == null) {
-            return null;
-        }
-        List<MediaPlayer> list = voiceMap.get(name);
-        if (list == null) {
-            list = new ArrayList<>();
-            voiceMap.put(name, list);
-        }
-        MediaPlayer mp = null;
-        for (MediaPlayer aMp : list) {
-            if (!aMp.isPlaying()) {
-                mp = aMp;
-                break;
-            }
-        }
-        if (mp == null && list.size() >= MAX_CHANNELS_PER_SOUND) {
-            Log.i(TAG, "too many channels");
-            return null;
-        }
-        if (mp == null) {
-            Log.i(TAG, "creating new MP for " + name);
-            mp = MediaPlayer.create(applicationContext, resId);
-            mp.setOnCompletionListener(this);
-            list.add(mp);
-        }
-        return mp;
-    }
-
-    public void startMediaPlayerForSound(String soundName) {
-        MediaPlayer mp = getMediaPlayerForSound(soundName);
-        if (mp != null) {
-            mp.seekTo(0);
-            mp.start();
+        Integer soundId = soundMap.get(soundName);
+        if (soundId != null) {
+            pool.play(soundId, 1, 1, 0, 0, 1);
         }
     }
 
     public void release() {
-        for (List<MediaPlayer> list : voiceMap.values()) {
-            for (MediaPlayer mp : list) {
-                mp.stop();
-                mp.reset();
-                mp.release();
-            }
-        }
+        pool.release();
+        pool = null;
     }
 
     @Override

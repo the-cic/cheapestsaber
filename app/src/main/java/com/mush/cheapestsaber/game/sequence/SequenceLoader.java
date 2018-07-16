@@ -33,8 +33,11 @@ public class SequenceLoader {
     private List<String> currentDefinition;
     private TargetSequence sequence;
 
-    public SequenceLoader(Context context, int textFileResourceId) {
-        InputStream inputStream = context.getResources().openRawResource(textFileResourceId);
+    public SequenceLoader(Context context, String fileName) {
+
+        InputStream inputStream = context.getResources().openRawResource(
+                context.getResources().getIdentifier(fileName,
+                        "raw", context.getPackageName()));
 
         readFile(inputStream);
 

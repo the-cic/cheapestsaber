@@ -10,7 +10,7 @@ import static com.mush.cheapestsaber.common.ColorPalette.opaque;
 /**
  * Created by mush on 12/07/2018.
  */
-public class Panel extends Frame {
+public class Panel extends Frame implements DrawableUIElement {
 
     private float corner;
     private float drawCorner;

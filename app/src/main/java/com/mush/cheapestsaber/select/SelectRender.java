@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.mush.cheapestsaber.common.ColorPalette;
+import com.mush.cheapestsaber.common.Frame;
 import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.common.PaintPalette;
 
@@ -24,9 +25,7 @@ public class SelectRender extends StateRender {
     }
 
     public void draw(Canvas canvas) {
-        main.panel.draw(canvas);
-        main.startButton.draw(canvas);
-        main.label.draw(canvas);
+        main.uiElements.draw(canvas);
 
         if (main.transition > 0) {
             transitionPaint.setColor(ColorPalette.fade(ColorPalette.BACKGROUND, main.transition));
@@ -38,8 +37,6 @@ public class SelectRender extends StateRender {
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        main.panel.resize(width, height);
-        main.startButton.resize(width, height);
-        main.label.resize(width, height);
+        main.uiElements.resize(width, height);
     }
 }

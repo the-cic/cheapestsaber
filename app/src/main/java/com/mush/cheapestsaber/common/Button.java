@@ -14,10 +14,10 @@ import static com.mush.cheapestsaber.common.ColorPalette.opaque;
 /**
  * Created by mush on 12/07/2018.
  */
-public class Button extends Panel {
+public class Button extends Panel implements InputUIElement {
 
     public interface ButtonDelegate {
-        public void onButtonClicked(Button button);
+        public void onButtonClicked(Button button, String action);
     }
 
     private boolean pressed;
@@ -31,6 +31,8 @@ public class Button extends Panel {
 
     public ButtonDelegate delegate;
     public boolean enabled = true;
+    public String action = null;
+    public Object value = null;
 
     public Button(RectF rect, float corner, String text) {
         super(rect, corner);
@@ -48,6 +50,11 @@ public class Button extends Panel {
 
     public void setTextSize(float size) {
         label.textSize = size;
+    }
+
+    public void setTextAlign(Paint.Align align) {
+        label.setAlign(align);
+        label.setMargin(align != Paint.Align.CENTER);
     }
 
     @Override
@@ -77,7 +84,7 @@ public class Button extends Panel {
                 boolean clicked = pressed;
                 pressed = false;
                 if (clicked && delegate != null) {
-                    delegate.onButtonClicked(this);
+                    delegate.onButtonClicked(this, action);
                 }
             }
             return true;

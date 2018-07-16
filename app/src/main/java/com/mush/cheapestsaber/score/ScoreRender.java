@@ -25,11 +25,7 @@ public class ScoreRender extends StateRender {
     }
 
     public void draw(Canvas canvas) {
-        main.panel.draw(canvas);
-        main.okButton.draw(canvas);
-        main.hitsLabel.draw(canvas);
-        main.missesLabel.draw(canvas);
-        main.comboLabel.draw(canvas);
+        main.uiElements.draw(canvas);
 
         if (main.transition > 0) {
             transitionPaint.setColor(ColorPalette.fade(ColorPalette.BACKGROUND, main.transition));
@@ -41,11 +37,7 @@ public class ScoreRender extends StateRender {
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        main.panel.resize(width, height);
-        main.okButton.resize(width, height);
-        main.hitsLabel.resize(width, height);
-        main.missesLabel.resize(width, height);
-        main.comboLabel.resize(width, height);
+        main.uiElements.resize(width, height);
     }
 
 }

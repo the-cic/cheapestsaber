@@ -29,7 +29,6 @@ public class GameInput implements StateInput, Button.ButtonDelegate {
 
     public void onTouchEvent(MotionEvent event) {
         if (main.quitButton.onTouchEvent(event)) {
-            quitPressed = true;
             return;
         }
 
@@ -98,8 +97,8 @@ public class GameInput implements StateInput, Button.ButtonDelegate {
     }
 
     @Override
-    public void onButtonClicked(Button button) {
-        if (button == main.quitButton) {
+    public void onButtonClicked(Button button, String action) {
+        if ("quit".equals(action)) {
             quitPressed = true;
         }
     }

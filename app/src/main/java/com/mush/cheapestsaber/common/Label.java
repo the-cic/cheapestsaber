@@ -8,7 +8,7 @@ import android.graphics.Typeface;
 /**
  * Created by mush on 12/07/2018.
  */
-public class Label extends Frame {
+public class Label extends Frame implements DrawableUIElement {
 
     public String text;
     public float textSize;
@@ -16,6 +16,7 @@ public class Label extends Frame {
     private Paint.Align align = Paint.Align.LEFT;
     private Paint textPaint;
     private float drawTextSize;
+    private boolean margin = false;
 
     public Label(RectF rect, String text) {
         super(rect);
@@ -35,6 +36,10 @@ public class Label extends Frame {
         textPaint.setTextAlign(align);
     }
 
+    public void setMargin(boolean margin) {
+        this.margin = margin;
+    }
+
     public void setColor(int color) {
         textPaint.setColor(color);
     }
@@ -45,7 +50,7 @@ public class Label extends Frame {
 
         float drawX = align == Paint.Align.CENTER
                 ? getDrawArea().centerX()
-                : getDrawArea().left;
+                : getDrawArea().left + (margin ? drawTextSize / 2 : 0);
 
         canvas.drawText(text, drawX, getDrawArea().centerY() - textHeight / 2, textPaint);
     }

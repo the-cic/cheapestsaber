@@ -11,6 +11,7 @@ import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.game.GameInput;
 import com.mush.cheapestsaber.game.GameMain;
 import com.mush.cheapestsaber.game.GameRender;
+import com.mush.cheapestsaber.game.Levels;
 import com.mush.cheapestsaber.score.ScoreInput;
 import com.mush.cheapestsaber.score.ScoreMain;
 import com.mush.cheapestsaber.score.ScoreRender;
@@ -35,6 +36,8 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
 
     private State state;
 
+    private Levels levels;
+
     private GameMain game;
     private SelectMain select;
     private ScoreMain score;
@@ -55,6 +58,8 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
 
     private MainContent(Context appContext) {
         this.applicationContext = appContext;
+
+        levels = new Levels(appContext);
 
         setState(State.SELECT);
     }
@@ -97,7 +102,7 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
 
     private void createSelect() {
         input = new SelectInput();
-        select = new SelectMain((SelectInput) input);
+        select = new SelectMain(levels, (SelectInput) input);
         select.delegate = this;
 
         render = new SelectRender(select);
@@ -108,7 +113,7 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
 
     private void createGame() {
         input = new GameInput();
-        game = new GameMain(applicationContext, (GameInput) input);
+        game = new GameMain(applicationContext, (GameInput) input, select.selectedLevel);
         game.delegate = this;
 
         render = new GameRender(game);
@@ -160,6 +165,7 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
 
     @Override
     public void onGameFinished() {
+        game.release();
         setState(State.SCORE);
     }
 
