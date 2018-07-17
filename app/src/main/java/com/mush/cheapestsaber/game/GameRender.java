@@ -81,6 +81,8 @@ public class GameRender extends StateRender {
         paints.toolPaint.setColor(paints.rightActiveTargetPaint.getColor());
         drawTool(canvas, game.getRightTool(), paints.toolPaint);
 
+        drawStickman(canvas, game.getLeftTool(), game.getRightTool());
+
         int size = 400;
         float scale = (float)screenWidth / size;
         canvas.save();
@@ -100,6 +102,96 @@ public class GameRender extends StateRender {
         canvas.restore();
 
         game.quitButton.draw(canvas);
+    }
+
+    private void drawStickman(Canvas canvas, Tool toolLeft, Tool toolRight) {
+        Paint paint = paints.gridPaint;
+        PointF lPoint = toolLeft.getPosition();
+        PointF rPoint = toolRight.getPosition();
+        PointF lDelPoint = toolLeft.getDelayedPosition();
+        PointF rDelPoint = toolRight.getDelayedPosition();
+
+        float size = screenWidth * 0.1f;
+        float x0 = screenWidth * 0.5f;
+        float y0 = inputArea.top;
+        float xOfs = (lPoint.x + rPoint.x) * size * 0.5f;
+        float yOfs = (lPoint.y + rPoint.y) * size * 0.5f;
+
+        float waistX = x0 + xOfs * 0.1f;
+        float waistY = y0 -size * 0.5f + yOfs * 0.05f;
+        float neckX = x0 + xOfs * 0.2f;
+        float neckY = y0 -size * 0.8f + yOfs * 0.1f;
+        float headR = size * 0.1f;
+        float headY = neckY - size * 0.1f;
+
+        float lFootX = x0 - size * 0.1f;
+        float rFootX = x0 + size * 0.1f;
+        float lKneeX = x0 - size * 0.1f + xOfs * 0.1f;
+        float rKneeX = x0 + size * 0.1f + xOfs * 0.1f;
+        float kneeY = y0 -size * 0.25f + yOfs * 0.02f;
+
+        float lShoulderX = neckX - size * 0.1f;
+        float lShoulderY = neckY + size * 0.05f - xOfs * 0.05f;
+        float rShoulderX = neckX + size * 0.1f;
+        float rShoulderY = neckY + size * 0.05f + xOfs * 0.05f;
+
+        float lFistX = lShoulderX + lPoint.x * size * 0.2f - size * 0.1f;
+        float lFistY = lShoulderY + lPoint.y * size * 0.2f + size * 0.1f;
+
+        float rFistX = rShoulderX + rPoint.x * size * 0.2f + size * 0.1f;
+        float rFistY = rShoulderY + rPoint.y * size * 0.2f + size * 0.1f;
+
+        float lElbowX = lShoulderX + lPoint.x * size * 0.1f - size * 0.1f;
+        float lElbowY = lFistY * 0.5f + lShoulderY * 0.5f + size * 0.1f;
+
+        float rElbowX = rShoulderX + rPoint.x * size * 0.1f + size * 0.1f;
+        float rElbowY = rFistY * 0.5f + rShoulderY * 0.5f + size * 0.1f;
+
+        float lTipX = lShoulderX + lPoint.x * size * 0.6f - size * 0.1f;
+        float lTipY = lShoulderY + lPoint.y * size * 0.7f - size * 0.01f;
+
+        float rTipX = rShoulderX + rPoint.x * size * 0.6f + size * 0.1f;
+        float rTipY = rShoulderY + rPoint.y * size * 0.7f - size * 0.01f;
+
+        float lDTipX = lShoulderX + lDelPoint.x * size * 0.6f - size * 0.1f;
+        float lDTipY = lShoulderY + lDelPoint.y * size * 0.7f - size * 0.01f;
+
+        float rDTipX = rShoulderX + rDelPoint.x * size * 0.6f + size * 0.1f;
+        float rDTipY = rShoulderY + rDelPoint.y * size * 0.7f - size * 0.01f;
+
+        paints.toolPaint.setStyle(Paint.Style.STROKE);
+        paints.toolPaint.setStrokeWidth(4);
+
+        paints.toolPaint.setColor(paints.leftTargetOutlinePaint.getColor());
+        canvas.drawLine(lDTipX, lDTipY, lTipX, lTipY, paints.toolPaint);
+
+        paints.toolPaint.setColor(paints.rightTargetOutlinePaint.getColor());
+        canvas.drawLine(rDTipX, rDTipY, rTipX, rTipY, paints.toolPaint);
+
+        paints.toolPaint.setStrokeWidth(2);
+
+        paints.toolPaint.setColor(paints.leftTargetPaint.getColor());
+        canvas.drawLine(lTipX, lTipY, lFistX, lFistY, paints.toolPaint);
+
+        paints.toolPaint.setColor(paints.rightTargetPaint.getColor());
+        canvas.drawLine(rTipX, rTipY, rFistX, rFistY, paints.toolPaint);
+
+        canvas.drawLine(lKneeX, kneeY, lFootX, y0, paint);
+        canvas.drawLine(lKneeX, kneeY, waistX, waistY, paint);
+        canvas.drawLine(rKneeX, kneeY, rFootX, y0, paint);
+        canvas.drawLine(rKneeX, kneeY, waistX, waistY, paint);
+
+        canvas.drawLine(neckX, neckY, waistX, waistY, paint);
+
+        canvas.drawLine(lShoulderX, lShoulderY, rShoulderX, rShoulderY, paint);
+
+        canvas.drawLine(lShoulderX, lShoulderY, lElbowX, lElbowY, paint);
+        canvas.drawLine(lElbowX, lElbowY, lFistX, lFistY, paint);
+
+        canvas.drawLine(rShoulderX, rShoulderY, rElbowX, rElbowY, paint);
+        canvas.drawLine(rElbowX, rElbowY, rFistX, rFistY, paint);
+
+        canvas.drawCircle(neckX, headY, headR, paint);
     }
 
     private void drawTool(Canvas canvas, Tool tool, Paint paint) {
