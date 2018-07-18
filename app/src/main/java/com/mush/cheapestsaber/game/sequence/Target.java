@@ -14,6 +14,7 @@ public class Target extends SequenceItem {
     private double endTime;
     private boolean hit;
     private boolean miss;
+    private double hitTime;
 
     private int side;
     private Point direction;
@@ -66,6 +67,11 @@ public class Target extends SequenceItem {
     public void setHit() {
         clearActive();
         hit = true;
+        hitTime = getCurrentTimeStartOffset();
+    }
+
+    public double getHitTime() {
+        return hitTime - getCurrentTimeStartOffset();
     }
 
     public void setMiss() {

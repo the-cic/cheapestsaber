@@ -6,6 +6,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.mush.cheapestsaber.common.PaintPalette;
 import com.mush.cheapestsaber.common.StateRender;
@@ -75,11 +76,11 @@ public class GameRender extends StateRender {
         paints.toolPaint.setStyle(Paint.Style.STROKE);
         paints.toolPaint.setStrokeWidth(4);
 
-        paints.toolPaint.setColor(paints.leftActiveTargetPaint.getColor());
-        drawTool(canvas, game.getLeftTool(), paints.toolPaint);
-
-        paints.toolPaint.setColor(paints.rightActiveTargetPaint.getColor());
-        drawTool(canvas, game.getRightTool(), paints.toolPaint);
+//        paints.toolPaint.setColor(paints.leftActiveTargetPaint.getColor());
+//        drawTool(canvas, game.getLeftTool(), paints.toolPaint);
+//
+//        paints.toolPaint.setColor(paints.rightActiveTargetPaint.getColor());
+//        drawTool(canvas, game.getRightTool(), paints.toolPaint);
 
         drawStickman(canvas, game.getLeftTool(), game.getRightTool());
 
@@ -111,7 +112,7 @@ public class GameRender extends StateRender {
         PointF lDelPoint = toolLeft.getDelayedPosition();
         PointF rDelPoint = toolRight.getDelayedPosition();
 
-        float size = screenWidth * 0.1f;
+        float size = screenWidth * 0.2f;
         float x0 = screenWidth * 0.5f;
         float y0 = inputArea.top;
         float xOfs = (lPoint.x + rPoint.x) * size * 0.5f;
@@ -162,18 +163,26 @@ public class GameRender extends StateRender {
         paints.toolPaint.setStyle(Paint.Style.STROKE);
         paints.toolPaint.setStrokeWidth(4);
 
-        paints.toolPaint.setColor(paints.leftTargetOutlinePaint.getColor());
+        paints.toolPaint.setColor(paints.leftTargetPaint.getColor());
         canvas.drawLine(lDTipX, lDTipY, lTipX, lTipY, paints.toolPaint);
 
-        paints.toolPaint.setColor(paints.rightTargetOutlinePaint.getColor());
+        paints.toolPaint.setColor(paints.rightTargetPaint.getColor());
         canvas.drawLine(rDTipX, rDTipY, rTipX, rTipY, paints.toolPaint);
 
-        paints.toolPaint.setStrokeWidth(2);
+        paints.toolPaint.setStrokeWidth(6);
 
         paints.toolPaint.setColor(paints.leftTargetPaint.getColor());
         canvas.drawLine(lTipX, lTipY, lFistX, lFistY, paints.toolPaint);
 
         paints.toolPaint.setColor(paints.rightTargetPaint.getColor());
+        canvas.drawLine(rTipX, rTipY, rFistX, rFistY, paints.toolPaint);
+
+        paints.toolPaint.setStrokeWidth(2);
+
+        paints.toolPaint.setColor(paints.targetHilightPaint.getColor());
+        canvas.drawLine(lTipX, lTipY, lFistX, lFistY, paints.toolPaint);
+
+        paints.toolPaint.setColor(paints.targetHilightPaint.getColor());
         canvas.drawLine(rTipX, rTipY, rFistX, rFistY, paints.toolPaint);
 
         canvas.drawLine(lKneeX, kneeY, lFootX, y0, paint);
@@ -243,7 +252,14 @@ public class GameRender extends StateRender {
             canvas.rotate(-rotation * 180);
         }
 
-        drawTargetBox(canvas, target, boxSize, percent);
+        if (target.isHit()) {
+            drawHitTargetBox(canvas, target, boxSize, percent);
+        } else {
+            drawTargetBox(canvas, target, boxSize, percent);
+
+//            drawTargetAnticipationHint2(canvas, target, boxSize, percent);
+//            drawTargetAnticipationHint(canvas, target, percent);
+        }
 
         canvas.restoreToCount(saveCount);
     }
@@ -270,11 +286,10 @@ public class GameRender extends StateRender {
         return rot;
     }
 
-    private void drawTargetBox(Canvas canvas, Target target, float size, double percent) {
+    private void drawTargetBox(Canvas canvas, Target target, float boxSize, double percent) {
         Paint paint = paints.targetPaint;
-        if (target.isHit()) {
-            paint.setColor(paints.targetHitPaint.getColor());
-        } else if (target.isMiss()) {
+
+        if (target.isMiss()) {
             paint.setColor(paints.targetMissedPaint.getColor());
         }
         else if (target.getSide() == Target.SIDE_LEFT) {
@@ -283,12 +298,9 @@ public class GameRender extends StateRender {
             paint.setColor(target.isActive() ? paints.rightActiveTargetPaint.getColor() : paints.rightTargetPaint.getColor());
         }
 
-        float halfSize = size / 2;
-        float margin = 0.8f;
-
         canvas.drawPath(targetBoxPath, paint);
 
-        if (!target.isHit() && !target.isActive() && !target.isMiss()) {
+        if (!target.isActive() && !target.isMiss()) {
             paint = paints.targetDestinationPaint;
             if (target.getSide() == Target.SIDE_LEFT) {
                 paint.setColor(paints.leftTargetOutlinePaint.getColor());
@@ -305,13 +317,81 @@ public class GameRender extends StateRender {
         if (direction != null) {
             canvas.drawPath(targetArrowPath, paints.targetHilightPaint);
         }
+    }
 
-        // Anticipation hint
+    private void drawHitTargetBox(Canvas canvas, Target target, float boxSize, double percent) {
+        double hitTime = target.getHitTime();
+        if (hitTime > 0.25) {
+            return;
+        }
+        double factor = hitTime / 0.3;
+
+        Paint paint = paints.targetPaint;
+        paint.setStrokeWidth(10);
+
+        if (target.getSide() == Target.SIDE_LEFT) {
+            paint.setColor(paints.leftActiveTargetPaint.getColor());
+        } else if (target.getSide() == Target.SIDE_RIGHT) {
+            paint.setColor(paints.rightActiveTargetPaint.getColor());
+        }
+
+        float scale = (float) (1 - factor);
+
+        canvas.save();
+        canvas.translate(0, (float) (-hitTime * boxSize));
+        canvas.scale(scale, scale);
+        canvas.rotate((float) (factor * 30));
+        canvas.clipRect(-boxSize * 0.5f, -boxSize * 0.5f, boxSize * 0.5f, 0);
+        canvas.drawPath(targetBoxPath, paint);
+        canvas.drawPath(targetArrowPath, paints.targetHilightPaint);
+        canvas.restore();
+
+        canvas.save();
+        canvas.translate(0, (float) (hitTime * boxSize));
+        canvas.scale(scale, scale);
+        canvas.rotate((float) (-factor * 30));
+        canvas.clipRect(-boxSize * 0.5f, 0, boxSize * 0.5f, boxSize * 0.5f);
+        canvas.drawPath(targetBoxPath, paint);
+        canvas.drawPath(targetArrowPath, paints.targetHilightPaint);
+        canvas.restore();
+    }
+
+    private void drawTargetAnticipationHint2(Canvas canvas, Target target, float boxSize, double percent) {
+        if (percent < 0) {
+            return;
+        }
+        Paint paint = paints.targetPaint;
+        paint.setStrokeWidth(2);
+
+        if (target.getSide() == Target.SIDE_LEFT) {
+            paint.setColor(paints.leftTargetPaint.getColor());
+        } else if (target.getSide() == Target.SIDE_RIGHT) {
+            paint.setColor(paints.rightTargetPaint.getColor());
+        }
+
+        canvas.drawLine(
+                (float)(-boxSize * percent * 0.25 - boxSize * 0.05),
+                0,
+                (float)(-boxSize * percent * 0.25 - boxSize * (0.2 + 0.05)),
+                boxSize * 0.2f,
+                paint);
+
+        canvas.drawLine(
+                (float)(-boxSize * percent * 0.25 - boxSize * 0.05),
+                0,
+                (float)(-boxSize * percent * 0.25 - boxSize * (0.2 + 0.05)),
+                -boxSize * 0.2f,
+                paint);
+    }
+
+    private void drawTargetAnticipationHint(Canvas canvas, Target target, double percent) {
         percent = 1 - percent;
         final double minPercent = 0.8;
         if (percent < minPercent || percent > 1) {
             return;
         }
+
+        Paint paint = paints.targetPaint;
 
         if (target.getSide() == Target.SIDE_LEFT) {
             paint.setColor(paints.leftActiveTargetPaint.getColor());
@@ -361,7 +441,7 @@ public class GameRender extends StateRender {
         Path path = new Path();
         path.moveTo(- halfSize * margin, - halfSize * wmargin);
         path.lineTo(- halfSize * margin, + halfSize * wmargin);
-        path.lineTo(-halfSize * (margin - wmargin), 0);
+        path.lineTo(- halfSize * (margin - wmargin), 0);
         path.lineTo(- halfSize * margin, - halfSize * wmargin);
 
         targetArrowPath = path;
