@@ -6,15 +6,14 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.mush.cheapestsaber.R;
-import com.mush.cheapestsaber.common.Button;
-import com.mush.cheapestsaber.common.Frame;
 import com.mush.cheapestsaber.common.StateMain;
 import com.mush.cheapestsaber.game.sequence.SequenceItem;
 import com.mush.cheapestsaber.game.sequence.SequenceLoader;
 import com.mush.cheapestsaber.game.sequence.SequenceSound;
 import com.mush.cheapestsaber.game.sequence.Target;
 import com.mush.cheapestsaber.game.sequence.TargetSequence;
+import com.mush.cheapestsaber.ui.UiButton;
+import com.mush.cheapestsaber.ui.UiComponent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,7 +51,7 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
 
     private SoundPlayer soundPlayer;
     private GameInput input;
-    public Button quitButton;
+    public UiButton quitButton;
     public boolean quit = false;
     private Levels.Level level;
 
@@ -76,9 +75,10 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
         rightTool = new Tool();
         activeTargets = new HashSet<>();
 
-        quitButton = new Button(new RectF(0.9f, 0.0f, 1f, 0.05f), 0.2f, "Quit");
+        quitButton = new UiButton(new RectF(0.85f, 0.05f, 0.95f, 0.10f), "Quit");
+        quitButton.setCornerRadius(0.2f);
         quitButton.setTextSize(0.03f);
-        quitButton.frameAlign = Frame.FrameAlign.TOP;
+        quitButton.setScreenAlign(UiComponent.ScreenAlign.TOP_LEFT);
         quitButton.action = "quit";
         quitButton.delegate = input;
     }
@@ -217,7 +217,7 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
     @Override
     public void onBecameActive(SequenceSound soundItem) {
 //        Log.i(TAG, "sound: " + soundItem.getName());
-        if (soundEnabled) {
+        if (soundEnabled && soundPlayer != null) {
             soundPlayer.play(soundItem.getName());
         }
     }

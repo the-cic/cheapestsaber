@@ -3,12 +3,11 @@ package com.mush.cheapestsaber.select;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-import com.mush.cheapestsaber.common.Button;
-import com.mush.cheapestsaber.common.Label;
-import com.mush.cheapestsaber.common.Panel;
 import com.mush.cheapestsaber.common.StateMain;
-import com.mush.cheapestsaber.common.UIElements;
 import com.mush.cheapestsaber.game.Levels;
+import com.mush.cheapestsaber.ui.UiButton;
+import com.mush.cheapestsaber.ui.UiLabel;
+import com.mush.cheapestsaber.ui.UiPanel;
 
 /**
  * Created by mush on 10/07/2018.
@@ -26,12 +25,10 @@ public class SelectMain implements StateMain {
     private SelectInput input;
     private Levels levels;
 
-    public Panel panel;
-    public Button startButton;
-    private Label selectedLabel;
+    public UiPanel panel;
+    public UiButton startButton;
+    private UiLabel selectedLabel;
     public Levels.Level selectedLevel;
-
-    public UIElements uiElements;
 
     public SelectMainDelegate delegate;
 
@@ -41,28 +38,26 @@ public class SelectMain implements StateMain {
 
         this.levels = levels;
 
-        uiElements = new UIElements();
-
-        panel = new Panel(new RectF(0.1f, 0.1f, 0.9f, 0.9f), 0.02f);
-        startButton = new Button(new RectF(0.2f, 0.7f, 0.8f, 0.8f), 0.2f, "Start");
+        panel = new UiPanel(new RectF(0.1f, 0.1f, 0.9f, 0.9f), 0.02f);
+        startButton = new UiButton(new RectF(0.1f, 0.6f, 0.7f, 0.7f), "Start");
         startButton.action = "start";
         startButton.delegate = input;
-        selectedLabel = new Label(new RectF(0.2f, 0.6f, 0.8f, 0.7f), "Lorem ipsum");
-        selectedLabel.textSize = 0.04f;
+        selectedLabel = new UiLabel(new RectF(0.1f, 0.5f, 0.7f, 0.6f), "Lorem ipsum");
+        selectedLabel.setTextSize(0.04f);
 
-        uiElements.add(panel);
-        uiElements.add(startButton);
-        uiElements.add(selectedLabel);
+        panel.add(startButton);
+        panel.add(selectedLabel);
 
         int i = 0;
         for (Levels.Level level : levels.levels) {
-            Button button = new Button(new RectF(0.2f, 0.2f + i * 0.075f, 0.8f, 0.25f + i * 0.075f), 0.01f, level.title + ":" + level.difficulty);
+            UiButton button = new UiButton(new RectF(0.1f, 0.1f + i * 0.075f, 0.7f, 0.15f + i * 0.075f), level.title + ":" + level.difficulty);
+            button.setCornerRadius(0.01f);
             button.setTextSize(0.04f);
             button.setTextAlign(Paint.Align.LEFT);
             button.delegate = input;
             button.action = "select";
-            button.value = level;
-            uiElements.add(button);
+            button.actionInfo = level;
+            panel.add(button);
             selectedLevel = level;
             i++;
         }

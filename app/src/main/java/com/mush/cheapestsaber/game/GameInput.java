@@ -4,13 +4,14 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-import com.mush.cheapestsaber.common.Button;
 import com.mush.cheapestsaber.common.StateInput;
+import com.mush.cheapestsaber.ui.UiActionDelegate;
+import com.mush.cheapestsaber.ui.UiComponent;
 
 /**
  * Created by mush on 25/06/2018.
  */
-public class GameInput implements StateInput, Button.ButtonDelegate {
+public class GameInput implements StateInput, UiActionDelegate {
 
     private PointF leftPoint;
     private PointF rightPoint;
@@ -97,7 +98,7 @@ public class GameInput implements StateInput, Button.ButtonDelegate {
     }
 
     @Override
-    public void onButtonClicked(Button button, String action) {
+    public void onUiAction(UiComponent component, String action, Object actionInfo) {
         if ("quit".equals(action)) {
             quitPressed = true;
         }

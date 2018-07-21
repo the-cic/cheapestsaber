@@ -3,8 +3,6 @@ package com.mush.cheapestsaber.game;
 import android.content.Context;
 import android.util.Log;
 
-import com.mush.cheapestsaber.common.Label;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

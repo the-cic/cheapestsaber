@@ -2,13 +2,11 @@ package com.mush.cheapestsaber.score;
 
 import android.graphics.RectF;
 
-import com.mush.cheapestsaber.common.Button;
-import com.mush.cheapestsaber.common.Label;
-import com.mush.cheapestsaber.common.Panel;
 import com.mush.cheapestsaber.common.StateMain;
-import com.mush.cheapestsaber.common.UIElements;
 import com.mush.cheapestsaber.game.GameMain;
-import com.mush.cheapestsaber.game.Levels;
+import com.mush.cheapestsaber.ui.UiButton;
+import com.mush.cheapestsaber.ui.UiLabel;
+import com.mush.cheapestsaber.ui.UiPanel;
 
 /**
  * Created by mush on 10/07/2018.
@@ -27,49 +25,45 @@ public class ScoreMain implements StateMain {
     public float transitionSpeed = - absTransitionSpeed;
     private ScoreInput input;
 
-    public Panel panel;
-    private Button okButton;
-    private Label levelNameLabel;
-    private Label levelDifficultyLabel;
-    private Label hitsLabel;
-    private Label missesLabel;
-    private Label comboLabel;
-
-    public UIElements uiElements;
+    public UiPanel panel;
+    private UiButton okButton;
+    private UiLabel levelNameLabel;
+    private UiLabel levelDifficultyLabel;
+    private UiLabel hitsLabel;
+    private UiLabel missesLabel;
+    private UiLabel comboLabel;
 
     public ScoreMain(GameMain game, ScoreInput scoreInput) {
         input = scoreInput;
         input.main = this;
 
-        uiElements = new UIElements();
+        panel = new UiPanel(new RectF(0.1f, 0.1f, 0.9f, 0.9f), 0.05f);
+        okButton = new UiButton(new RectF(0.1f, 0.6f, 0.7f, 0.7f), "OK");
+        okButton.setCornerRadius(0.2f);
 
-        panel = new Panel(new RectF(0.1f, 0.1f, 0.9f, 0.9f), 0.05f);
-        okButton = new Button(new RectF(0.2f, 0.7f, 0.8f, 0.8f), 0.2f, "OK");
-
-        levelNameLabel = new Label(new RectF(0.2f, 0.2f, 0.8f, 0.25f),
+        levelNameLabel = new UiLabel(new RectF(0.1f, 0.05f, 0.8f, 0.25f),
                 game.getLevel().title);
-        levelNameLabel.textSize = 0.05f;
-        levelDifficultyLabel = new Label(new RectF(0.2f, 0.25f, 0.8f, 0.3f),
+        levelNameLabel.setTextSize(0.05f);
+        levelDifficultyLabel = new UiLabel(new RectF(0.1f, 0.1f, 0.8f, 0.3f),
                 game.getLevel().difficulty);
-        levelDifficultyLabel.textSize = 0.04f;
+        levelDifficultyLabel.setTextSize(0.04f);
 
-        hitsLabel = new Label(new RectF(0.2f, 0.35f, 0.8f, 0.45f),
+        hitsLabel = new UiLabel(new RectF(0.1f, 0.25f, 0.8f, 0.45f),
                 "Hit: " + game.getHitCount());
-        missesLabel = new Label(new RectF(0.2f, 0.45f, 0.8f, 0.55f),
+        missesLabel = new UiLabel(new RectF(0.1f, 0.325f, 0.8f, 0.525f),
                 "Missed: " + (game.getTotalCount() - game.getHitCount()));
-        comboLabel = new Label(new RectF(0.2f, 0.55f, 0.8f, 0.65f),
+        comboLabel = new UiLabel(new RectF(0.1f, 0.4f, 0.8f, 0.6f),
                 "Best combo: " + game.getMaxComboLength());
 
         okButton.delegate = input;
         okButton.action = "ok";
 
-        uiElements.add(panel);
-        uiElements.add(okButton);
-        uiElements.add(levelNameLabel);
-        uiElements.add(levelDifficultyLabel);
-        uiElements.add(hitsLabel);
-        uiElements.add(missesLabel);
-        uiElements.add(comboLabel);
+        panel.add(okButton);
+        panel.add(levelNameLabel);
+        panel.add(levelDifficultyLabel);
+        panel.add(hitsLabel);
+        panel.add(missesLabel);
+        panel.add(comboLabel);
     }
 
     public void update(double seconds) {

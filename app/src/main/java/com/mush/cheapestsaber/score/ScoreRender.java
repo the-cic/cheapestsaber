@@ -25,11 +25,11 @@ public class ScoreRender extends StateRender {
     }
 
     public void draw(Canvas canvas) {
-        main.uiElements.draw(canvas);
+        main.panel.draw(canvas);
 
         if (main.transition > 0) {
             transitionPaint.setColor(ColorPalette.fade(ColorPalette.BACKGROUND, main.transition));
-            canvas.drawRect(main.panel.getDrawArea(), transitionPaint);
+            canvas.drawRect(main.panel.getTrueArea(), transitionPaint);
         }
     }
 
@@ -37,7 +37,7 @@ public class ScoreRender extends StateRender {
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        main.uiElements.resize(width, height);
+        main.panel.resize(width, height);
     }
 
 }
