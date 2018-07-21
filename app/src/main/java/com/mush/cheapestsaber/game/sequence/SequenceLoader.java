@@ -32,6 +32,7 @@ public class SequenceLoader {
     private Map<String, List<String>> definitionMap;
     private List<String> currentDefinition;
     private TargetSequence sequence;
+    private int sequenceDifficulty;
 
     public SequenceLoader(Context context, String fileName) {
 
@@ -59,9 +60,10 @@ public class SequenceLoader {
         }
     }
 
-    public void parseInto(TargetSequence intoSequence) {
+    public void parseInto(TargetSequence intoSequence, int difficulty) {
         sequence = intoSequence;
         sequence.clear();
+        sequenceDifficulty = difficulty;
         definitionMap.clear();
         state = State.NONE;
 
@@ -143,7 +145,7 @@ public class SequenceLoader {
     }
 
     private void parseMain(String command) {
-        String[] parts = command.split("[ ,]");
+        String[] parts = command.split("[\t ,]+");
         if (parts.length == 0) {
             return;
         }
@@ -167,16 +169,53 @@ public class SequenceLoader {
         sequence.addItem(new SequenceSound(delay).setName(parts[1]));
     }
 
-    private void parseTarget(String[] parts, double delay) {
-        String shape = parts[0];
-        String offsetXStr = parts.length > 1 ? parts[1] : null;
-        String offsetYStr = parts.length > 2 ? parts[2] : null;
+    private Integer getTargetDifficulty(String first) {
+        try {
+            return Integer.parseInt(first);
+
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private int getTargetSide(String shape) {
         char sideChar = shape.charAt(0);
-        int side = sideChar == 'L' ? Target.SIDE_LEFT : 0;
-        side = sideChar == 'R' ? Target.SIDE_RIGHT : side;
+        int side;
+        switch (sideChar) {
+            case 'L':
+                side = Target.SIDE_LEFT;
+                break;
+            case 'R':
+                side = Target.SIDE_RIGHT;
+                break;
+            default:
+                side = 0;
+        }
+        return side;
+    }
+
+    private void parseTarget(String[] parts, double delay) {
+        int startIndex = 0;
+
+        Integer difficulty = getTargetDifficulty(parts[startIndex]);
+
+        if (difficulty != null) {
+            if (difficulty != sequenceDifficulty) {
+                return;
+            } else {
+                startIndex++;
+            }
+        }
+
+        String shape = parts[startIndex];
+        String offsetXStr = parts.length > startIndex + 1 ? parts[startIndex + 1] : null;
+        String offsetYStr = parts.length > startIndex + 2 ? parts[startIndex + 2] : null;
+
+        int side = getTargetSide(shape);
         if (side == 0) {
             return;
         }
+
         int dirX = 0;
         int dirY = 0;
         String dirStr = shape.substring(1);

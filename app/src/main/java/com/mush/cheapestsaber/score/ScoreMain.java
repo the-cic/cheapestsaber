@@ -8,6 +8,8 @@ import com.mush.cheapestsaber.ui.UiButton;
 import com.mush.cheapestsaber.ui.UiLabel;
 import com.mush.cheapestsaber.ui.UiPanel;
 
+import java.util.List;
+
 /**
  * Created by mush on 10/07/2018.
  */
@@ -45,7 +47,7 @@ public class ScoreMain implements StateMain {
                 game.getLevel().title);
         levelNameLabel.setTextSize(0.05f);
         levelDifficultyLabel = new UiLabel(new RectF(0.1f, 0.1f, 0.8f, 0.3f),
-                game.getLevel().difficulty);
+                game.getLevel().difficultyNames[game.getLevelDifficulty()]);
         levelDifficultyLabel.setTextSize(0.04f);
 
         hitsLabel = new UiLabel(new RectF(0.1f, 0.25f, 0.8f, 0.45f),

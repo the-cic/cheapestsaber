@@ -113,7 +113,7 @@ public class MainContent implements GameMain.GameMainDelegate, ScoreMain.ScoreMa
 
     private void createGame() {
         input = new GameInput();
-        game = new GameMain(applicationContext, (GameInput) input, select.selectedLevel);
+        game = new GameMain(applicationContext, (GameInput) input, select.selectedLevel, select.selectedDifficulty);
         game.delegate = this;
 
         render = new GameRender(game);

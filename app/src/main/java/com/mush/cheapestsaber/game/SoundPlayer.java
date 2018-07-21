@@ -36,8 +36,8 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
         this.applicationContext = appContext;
 
         SoundPool.Builder builder = new SoundPool.Builder();
-        builder.setMaxStreams(7);
-        builder.setAudioAttributes(new AudioAttributes.Builder().setFlags(AudioAttributes.USAGE_GAME).build());
+        builder.setMaxStreams(16);
+        //builder.setAudioAttributes(new AudioAttributes.Builder().setFlags(AudioAttributes.USAGE_GAME).build());
         pool = new SoundPool.Builder().build();
 
         soundId1 = pool.load(appContext,  R.raw.drum1, 1);
@@ -58,7 +58,7 @@ public class SoundPlayer implements MediaPlayer.OnCompletionListener {
 //        Log.i(TAG, "play " + soundName);
         Integer soundId = soundMap.get(soundName);
         if (soundId != null) {
-            pool.play(soundId, 1, 1, 0, 0, 1);
+            pool.play(soundId, 1, 1, 1, 0, 1);
         }
     }
 

@@ -24,6 +24,7 @@ public abstract class UiComponent {
     private RectF trueArea;
     public ScreenAlign screenAlign = ScreenAlign.MIDDLE;
     public boolean enabled = true;
+    public boolean visible = true;
 
     public UiComponent(RectF rect) {
         this.unitArea = new RectF(rect);
@@ -36,6 +37,10 @@ public abstract class UiComponent {
     }
 
     public void draw(Canvas canvas) {
+        if (!visible) {
+            return;
+        }
+
         render(canvas, trueArea);
 
         for (UiComponent component : components) {

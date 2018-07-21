@@ -18,13 +18,14 @@ public class Levels {
     public class Level {
         public String fileName;
         public String title;
-        public String difficulty;
+        public String[] difficultyNames;
 
         public Level(String line) {
             String[] parts = line.split(":");
-            fileName = parts[0];
-            title = parts[1];
-            difficulty = parts[2];
+            fileName = parts[0].trim();
+            title = parts[1].trim();
+            String difficulty = parts[2].trim();
+            difficultyNames = difficulty.split("[ ,]+");
         }
     }
 

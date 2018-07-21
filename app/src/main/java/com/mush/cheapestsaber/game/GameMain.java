@@ -54,12 +54,14 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
     public UiButton quitButton;
     public boolean quit = false;
     private Levels.Level level;
+    private int levelDifficulty;
 
     public GameMainDelegate delegate;
 
-    public GameMain(Context appContext, GameInput gameInput, Levels.Level gameLevel) {
+    public GameMain(Context appContext, GameInput gameInput, Levels.Level gameLevel, int difficulty) {
         applicationContext = appContext;
         level = gameLevel;
+        levelDifficulty = difficulty;
 
         soundPlayer = new SoundPlayer(appContext);
         input = gameInput;
@@ -86,7 +88,7 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
     private void createSequence() {
         SequenceLoader loader = new SequenceLoader(applicationContext, level.fileName);
 
-        loader.parseInto(targetSequence);
+        loader.parseInto(targetSequence, levelDifficulty);
     }
 
     public void release() {
@@ -177,6 +179,10 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
 
     public Levels.Level getLevel() {
         return level;
+    }
+
+    public int getLevelDifficulty() {
+        return levelDifficulty;
     }
 
     private void reset() {

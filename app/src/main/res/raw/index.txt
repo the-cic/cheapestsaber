@@ -1,2 +1,2 @@
-sequence0:100 Discount Coupons:Normal
-sequence1:100 Discount Coupons:Hard
+sequence0   : Lidl                 :Easy, Normal
+sequence100 : 100 Discount Coupons : Normal,Hard
