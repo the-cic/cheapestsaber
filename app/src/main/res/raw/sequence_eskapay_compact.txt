@@ -1,0 +1,570 @@
+// Eck-AH-pey!
+// Normal, Hard
+
+bpm 175;lpb 2
+
+
+define 16Warmup
+play Drum4; // 0
+;
+;           // 1
+;
+play Drum4; // 2
+;
+;           // 3 !
+;
+play Drum4; // 4 -
+;
+play Drum4; // 5 !
+;
+play Drum4; // 6 !
+;
+;           // 7 -
+;
+
+define 16Intro
+play Drum3; // 0
+;
+;           // 1
+play Drum3; // !
+play Drum1; // 2
+;
+play Drum3; // 3 !
+;
+;           // 4 -
+;
+play Drum3; // 5 !
+;
+play Drum1; // 6 !
+;
+;           // 7 -
+;
+
+define 16Transition
+; play Drum4
+;
+; play Drum4
+;
+; play Drum4
+;
+; play Drum4
+;
+; play Drum4
+;
+; play Drum4
+;
+; play Drum4
+;
+; play Drum2
+;
+
+define 8Loop
+play Drum3; // 0
+;
+play Drum1; // 1
+;
+;           // 2
+play Drum3
+play Drum1; // 3
+;
+
+
+
+start
+;play Silence
+;
+;
+;
+;
+;
+;
+;
+@play 16Warmup
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+// 0; @play 16Intro;    0 LV        ; 1 LV
+;
+;
+;
+;                       0 RV        ; 1 RV
+;
+;                                   ; 1 LV
+;
+// 1;
+;
+;                                   ; 1 L^
+;
+;                       0 R>        ; 1 R>
+;
+;
+;
+// 2; @play 16Intro;    0 LV        ; 1 LV
+;
+;
+;
+;                       0 R^        ; 1 R>
+;
+;                                   ; 1 L<
+;
+// 3;
+;
+;                                   ; 1 LV
+;
+;                       0 R>        ; 1 R>
+;
+;
+;
+// 4; @play 16Intro;    0 L^        ; 1 LV
+;
+;
+;
+;                       0 R^        ; 1 RV
+;
+;                                   ; 1 LV
+;
+// 5;
+;
+;                                   ; 1 LV
+;
+;                       0 R>        ; 1 R>
+;
+;
+;
+// 6; @play 16Intro;    0 LV        ; 1 LV
+;
+;
+;
+;                       0 RV        ; 1 RV
+;
+;                                   ; 1 L^
+;
+// 7;                   0 L^
+;
+;                                   ; 1 LV
+;
+;                       0 RV        ; 1 R^
+;
+;
+;
+// 8; @play 8Loop;      LV; RV
+;
+;
+;
+;
+;
+;
+;
+// 9; @play 8Loop
+;
+;
+;
+;
+;
+;
+;
+// A; @play 8Loop;      RV -1; LV +1
+;
+;
+;
+;
+;
+;
+;
+// B; @play 8Loop
+;
+;
+;
+;
+;
+;
+;
+// C; @play 8Loop;      0 R>        ; 1 R>
+;
+;
+;
+;                       0 R<        ; 1 R<
+;
+;
+;
+// D; @play 8Loop;      0 R>        ; 1 R>
+;
+;
+;
+;                                   ; 1 R^
+;
+;
+;
+// E; @play 8Loop;      0 L<        ; 1 LV
+;
+;
+;
+;                       0 L>
+;
+;
+;
+// F; @play 8Loop;      0 L<        ; 1 RV
+;
+;
+;
+;
+;
+;
+;
+// 10; @play 8Loop;     LV; RV
+;
+;
+;
+;
+;
+;
+;
+// 11; @play 8Loop
+;
+;
+;
+;
+;
+;
+;
+// 12; @play 8Loop;     0 LV; 0 RV      ; 1 L^; 1 RV
+;
+;
+;
+;
+;
+;
+;
+// 13; @play 8Loop
+;
+;
+;
+;
+;
+;
+;
+// 14; @play 8Loop;     0 LV; 0 RV      ; 1 RV -1; 1 LV +1
+;
+;
+;
+;
+;
+;
+;
+// 15; @play 8Loop;                     ; 1 L<
+;
+;
+;
+;                                       ; 1 R>
+;
+;
+;
+// 16; @play 8Loop;     LV; RV
+;
+;
+;
+;
+;
+;
+;
+// 17; @play 8Loop;     0 RV;           ; 1 RV
+;
+;
+;
+;                       0 L^;           ; 1 LV
+;
+;
+;
+// 18; @play 16Transition
+;
+;
+;
+;
+;
+;
+;
+// 19;
+;
+;
+;
+;
+;
+;
+;
+// 20; @play 8Loop;     0 LV;           ; 1 LV
+;
+;                                       ; 1 RV
+;
+;                       0 R>            ; 1 L^
+;
+;                                       ; 1 R^
+;
+// 21; @play 8Loop;     0 LV            ; 1 LV
+;
+;                                       ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R>            ; 1 R>
+;
+// 22; @play 8Loop;     0 LV
+;
+;                                       ; 1 RV
+;
+;                       0 RV            ; 1 L^
+;
+;                                       ; 1 R^
+;
+// 23; @play 8Loop;     0 L<            ; 1 L<
+;
+;                                       ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R>            ; 1 R^>
+;
+// 24; @play 8Loop;     0 LV
+;
+;                                       ; 1 RV
+;
+;                       0 RV            ; 1 L^
+;
+;                                       ; 1 R^
+;
+// 25; @play 8Loop;     0 L^            ; 1 LV
+;
+;                                       ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R>            ; 1 R>
+;
+// 26; @play 8Loop;     0 LV
+;
+;                                       ; 1 LV
+;
+;                       0 RV            ; 1 RV
+;
+;                                       ; 1 L^
+;
+// 27; @play 8Loop;     0 LV            ; 1 R>
+;
+;                                       ; 1 R<
+;
+;                       0 RV            ; 1 LV
+;
+;                                       ; 1 L^
+;
+// 28; @play 8Loop;     0 LV            ; 1 LV ; //
+;
+;                                       ; 1 RV
+;
+;                       0 RV            ; 1 L^
+;
+;                                       ; 1 R^
+;
+// 29; @play 8Loop;     0 LV            ; 1 LV
+;
+;                                       ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R>            ; 1 R>
+;
+// 2A; @play 8Loop;     0 LV
+;
+;                                       ; 1 RV
+;
+;                       0 RV            ; 1 L^
+;
+;                                       ; 1 R^
+;
+// 2B; @play 8Loop;     0 L<            ; 1 L<
+;
+;                                       ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R>            ; 1 R^>
+;
+// 2C; @play 8Loop;     0 LV
+;
+;                                       ; 1 RV
+;
+;                       0 RV            ; 1 L^
+;
+;                                       ; 1 R^
+;
+// 2D; @play 8Loop;     0 LV            ; 1 LV
+;
+;                                       ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R>            ; 1 R>
+;
+// 2E; @play 8Loop;     0 LV
+;
+;                                       ; 1 L<
+;
+;                       0 RV            ; 1 RV
+;
+;                                       ; 1 L^
+;
+// 2F; @play 8Loop;     0 LV            ; 1 LV; 1 RV
+;
+;
+;
+;                       0 RV            ; 1 LV
+;
+;                                       ; 1 L^
+;
+// 30; @play 8Loop
+;
+;                       0 RV            ; 1 RV
+;
+;                       0 LV            ; 1 R^
+;
+;                                       ; 1 LV
+;
+// 31; @play 8Loop;     0 R>            ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R<            ; 1 R>
+;
+;
+;
+// 32; @play 8Loop
+;
+;                       0 RV            ; 1 RV
+;
+;                       0 LV            ; 1 R^
+;
+;                                       ; 1 LV
+;
+// 33; @play 8Loop;     0 R>            ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 L<            ; 1 R>
+;
+;
+;
+// 34; @play 8Loop
+;
+;                       0 RV            ; 1 RV
+;
+;                       0 LV            ; 1 R^
+;
+;                                       ; 1 LV
+;
+// 35; @play 8Loop;     0 R>
+;
+;                                       ; 1 L<^
+;
+;                       0 LV            ; 1 R>
+;
+;
+;
+// 36; @play 8Loop;     0 RV            ; 1 LV
+;
+;                       0 LV            ; 1 L^
+;
+;                       0 R^            ; 1 R^
+;
+;                       0 L^            ; 1 RV
+;
+// 37; @play 8Loop
+;
+;
+;
+;
+;
+;
+;
+// 38; @play 8Loop
+;
+;                       0 RV            ; 1 RV
+;
+;                       0 LV            ; 1 R^
+;
+;                                       ; 1 LV
+;
+// 39; @play 8Loop;     0 R>            ; 1 RV
+;
+;                                       ; 1 L<
+;
+;                       0 L<            ; 1 R>
+;
+;
+;
+// 3A; @play 8Loop
+;
+;                       0 R>            ; 1 RV
+;
+;                       0 LV            ; 1 R^
+;
+;                                       ; 1 LV
+;
+// 3B; @play 8Loop;     0 R>            ; 1 RV
+;
+;                                       ; 1 L^
+;
+;                       0 R<            ; 1 R>
+;
+;
+;
+// 3C; @play 8Loop
+;
+;                       0 R>            ; 1 RV
+;
+;                       0 LV            ; 1 R^
+;
+;                                       ; 1 LV
+;
+// 3D; @play 8Loop;     0 R>
+;
+;                                       ; 1 L<^
+;
+;                       0 L<            ; 1 R>
+;
+;
+;
+// 3E; @play 8Loop;     0 RV            ; 1 LV
+;
+;                       0 LV            ; 1 L^
+;
+;                       0 R^            ; 1 R^
+;
+;                       0 L^            ; 1 RV
+;
+// 3F; @play 8Loop
+;
+;
+;
+;
+;
+;
+;
+// 40; play Drum2;      LV; RV
+;
+;
+;
+;
+;
+;
+;
+; play Silence

@@ -233,21 +233,21 @@ public class SequenceLoader {
             case "^":
                 dirY = -1;
                 break;
-            case ">/":
+            case ">V": case "V>":
                 dirX = 1;
                 dirY = 1;
                 break;
-            case "</":
+            case "<^": case "^<":
                 dirX = -1;
                 dirY = -1;
                 break;
-            case "V/":
+            case "V<": case "<V":
+                dirX = -1;
                 dirY = 1;
-                dirX = -1;
                 break;
-            case "^/":
-                dirY = -1;
+            case "^>": case ">^":
                 dirX = 1;
+                dirY = -1;
                 break;
         }
 
