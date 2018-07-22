@@ -104,8 +104,9 @@ public class SequenceLoader {
             String[] commands = line.trim().isEmpty() ? null : line.split(";");
             if (commands != null){
                 for (String command : commands) {
-                    if (command.startsWith(PLAY)) {
-                        String name = command.substring(PLAY.length()).trim();
+                    String trimCommand = command.trim();
+                    if (trimCommand.startsWith(PLAY)) {
+                        String name = trimCommand.substring(PLAY.length()).trim();
                         merge(name, i);
                     }
                 }
