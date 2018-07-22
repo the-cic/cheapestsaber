@@ -1,2 +1,2 @@
-sequence_house : Get house            : Normal
-sequence_100   : 100 Discount Coupons : Normal, Hard
+sequence_eskapay : Eskahpay             : Normal
+sequence_100     : 100 Discount Coupons : Normal, Hard
