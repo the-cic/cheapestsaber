@@ -18,8 +18,8 @@ public class Target extends SequenceItem {
 
     private int side;
     private Point direction;
-    public int xOffset;
-    public int yOffset;
+    private float xOffset;
+    private float yOffset;
 
     public Target(double delayTime, double duration) {
         super(delayTime);
@@ -41,7 +41,7 @@ public class Target extends SequenceItem {
         return this;
     }
 
-    public Target setOffset(int x, int y) {
+    public Target setOffset(float x, float y) {
         this.xOffset = x;
         this.yOffset = y;
         return this;
@@ -92,5 +92,13 @@ public class Target extends SequenceItem {
 
     public boolean isMiss() {
         return miss;
+    }
+
+    public float getxOffset() {
+        return xOffset;
+    }
+
+    public float getyOffset() {
+        return yOffset;
     }
 }

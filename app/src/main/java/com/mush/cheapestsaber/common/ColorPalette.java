@@ -13,9 +13,9 @@ public class ColorPalette {
     public static final int PANEL = 0x888888;
     public static final int BUTTON = 0xAAAAAA;
     public static final int BUTTON_PRESSED = 0xBBBBBB;
-    public static final int BUTTON_SELECTED = 0xDDDDDD;
+    public static final int BUTTON_SELECTED = 0xFFFFFF;
     public static final int TEXT_DISABLED = 0xCCCCCC;
-    public static final int TEXT_SELECTED = 0x888888;
+    public static final int TEXT_SELECTED = 0x333333;
 
     public static final int TARGET_LEFT = 0xCF0000;
     public static final int TARGET_RIGHT = 0x0000CF;

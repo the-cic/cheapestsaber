@@ -103,6 +103,7 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
         applyTimeToWindow();
     }
 
+    // TODO: this skips new items if items are sparse and spaced apart more than window size
     private boolean advanceWindowIndex(SequenceItem firstItem) {
         SequenceItem nextItem = firstItem;
         boolean changed = false;
@@ -151,6 +152,17 @@ public class TargetSequence implements SequenceItem.ActivationDelegate {
             targetWindow.add(nextItem);
             nextItem = getNextItem(index);
             index++;
+        }
+
+        if (targetWindow.isEmpty()) {
+            SequenceItem firstNextItem = getNextItem(windowIndex);
+            if (firstNextItem != null) {
+                targetWindow.add(firstNextItem);
+            }
+            SequenceItem nextNextItem = getNextItem(windowIndex + 1);
+            if (nextNextItem != null) {
+                targetWindow.add(nextNextItem);
+            }
         }
     }
 

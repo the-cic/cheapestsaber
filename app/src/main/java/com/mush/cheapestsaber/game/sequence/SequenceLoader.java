@@ -251,11 +251,11 @@ public class SequenceLoader {
                 break;
         }
 
-        int offsetX = side == Target.SIDE_LEFT ? -1 : 1;
-        int offsetY = 0;
+        float offsetX = side == Target.SIDE_LEFT ? -1 : 1;
+        float offsetY = 0;
 
-        offsetX = offsetXStr != null ? Integer.parseInt(offsetXStr) : offsetX;
-        offsetY = offsetYStr != null ? Integer.parseInt(offsetYStr) : offsetY;
+        offsetX = offsetXStr != null ? Float.parseFloat(offsetXStr) : offsetX;
+        offsetY = offsetYStr != null ? Float.parseFloat(offsetYStr) : offsetY;
 
         sequence.addItem(new Target(delay, targetDuration).setShape(side, dirX, dirY).setOffset(offsetX, offsetY));
     }

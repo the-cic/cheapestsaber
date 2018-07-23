@@ -233,8 +233,8 @@ public class GameRender extends StateRender {
     private void drawTarget(Canvas canvas, Target target, double windowDuration) {
         float boxSize = getBoxSize();
 
-        float x = target.xOffset * boxSize * 1;
-        float y = target.yOffset * boxSize * 1;
+        float x = target.getxOffset() * boxSize * 1;
+        float y = target.getyOffset() * boxSize * 1;
 
         int saveCount = canvas.save();
 

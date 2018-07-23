@@ -238,7 +238,24 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
     private boolean toolMatchesTarget(Tool tool, Target target) {
         Point toolDirection = tool.getDirection();
         Point targetDirection = target.getDirection();
-        return toolDirection.equals(targetDirection);
+
+        if (!toolDirection.equals(targetDirection)) {
+            return false;
+        }
+
+        float minX = -1;
+        float maxX = 1;
+
+        minX = (-1 + target.getxOffset()) / 2f;
+        maxX = ( 1 + target.getxOffset()) / 2f;
+
+        PointF position = tool.getPosition();
+
+        if (position.x < minX || position.x > maxX) {
+            return false;
+        }
+
+        return true;
     }
 
     private void onHit(Target target) {
