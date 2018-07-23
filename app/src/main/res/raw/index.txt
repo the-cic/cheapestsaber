@@ -1,2 +1,3 @@
-sequence_eskapay_compact : Eskahpay             : Normal, Hard
-sequence_100             : 100 Discount Coupons : Normal, Hard
+level_0
+level_eskapay
+level_100coupons

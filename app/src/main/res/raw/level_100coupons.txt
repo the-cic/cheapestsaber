@@ -1,5 +1,5 @@
-// 100 Lidl coupons,
-// Normal, Hard
+title 100 Discount Coupons
+difficulty Normal, Hard
 
 bpm 105;lpb 4
 

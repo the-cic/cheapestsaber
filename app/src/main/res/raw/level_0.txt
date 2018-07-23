@@ -1,0 +1,120 @@
+title Test
+difficulty Normal
+
+bpm 105;lpb 4
+
+
+start
+;play Silence
+;
+;
+;
+;///
+;
+;
+;
+;play Silence
+;
+;
+;
+;///
+;
+;
+;
+@play 8Intro; LV; // 0
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; LV 0; // 0
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; L> +1
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; L< -1
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; RV
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; RV 0
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; R> +1; // 2
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; R< -1
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; LV 0 +1; // 3
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; R^ 0 -1
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; LV 0; RV 1
+;
+;
+;
+;
+;
+;
+;
+@play 8Intro; LV -1; RV 0
+;
+;
+;
+;
+;
+;
+;
+play Silence

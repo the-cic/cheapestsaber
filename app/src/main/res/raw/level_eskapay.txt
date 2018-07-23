@@ -1,5 +1,5 @@
-// Eck-AH-pey!
-// Normal, Hard
+title Eskahpay
+difficulty Normal, Hard
 
 bpm 175;lpb 2
 
