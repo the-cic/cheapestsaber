@@ -40,6 +40,7 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
     private TargetSequence targetSequence;
     private double targetWindowDuration = 2.0;
     private Set<Target> activeTargets;
+    private Set<ToolHit> toolHits;
 
     private int comboLength;
     private int maxComboLength;
@@ -76,6 +77,7 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
         leftTool = new Tool();
         rightTool = new Tool();
         activeTargets = new HashSet<>();
+        toolHits = new HashSet<>();
 
         quitButton = new UiButton(new RectF(0.85f, 0.05f, 0.95f, 0.10f), "Quit");
         quitButton.setCornerRadius(0.2f);
@@ -118,17 +120,32 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
         leftTool.update(leftPoint, secondsPerFrame);
         rightTool.update(rightPoint, secondsPerFrame);
 
+        List<ToolHit> removeHits = new ArrayList<>();
+        for (ToolHit toolHit : toolHits) {
+            toolHit.update(secondsPerFrame);
+            if (toolHit.getAge() > ToolHit.MAX_AGE) {
+                removeHits.add(toolHit);
+            }
+        }
+
+        for (ToolHit toolHit : removeHits) {
+            toolHits.remove(toolHit);
+        }
+        removeHits.clear();
+
         List<Target> removeTargets = new ArrayList<>();
         for (Target target : activeTargets) {
             Tool tool = getToolForTarget(target);
             if (toolMatchesTarget(tool, target)) {
                 removeTargets.add(target);
+                toolHits.add(new ToolHit(tool));
             }
         }
         for (Target target : removeTargets) {
             activeTargets.remove(target);
             onHit(target);
         }
+        removeTargets.clear();
 
         targetSequence.advance(/*secondsPerFrame*/);
     }
@@ -159,6 +176,10 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
 
     public List<SequenceItem> getTargetWindow() {
         return targetSequence.getTargetWindow();
+    }
+
+    public Set<ToolHit> getToolHits() {
+        return toolHits;
     }
 
     public int getTotalCount() {
@@ -246,8 +267,8 @@ public class GameMain implements StateMain, TargetSequence.SequenceDelegate {
         float minX = -1;
         float maxX = 1;
 
-        minX = (-1 + target.getxOffset()) / 2f;
-        maxX = ( 1 + target.getxOffset()) / 2f;
+        minX = (float) (target.getxOffset() - 0.9);
+        maxX = (float) (target.getxOffset() + 0.9);
 
         PointF position = tool.getPosition();
 

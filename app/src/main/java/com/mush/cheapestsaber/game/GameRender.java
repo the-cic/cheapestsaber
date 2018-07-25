@@ -8,6 +8,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 
+import com.mush.cheapestsaber.common.ColorPalette;
 import com.mush.cheapestsaber.common.PaintPalette;
 import com.mush.cheapestsaber.common.StateRender;
 import com.mush.cheapestsaber.game.sequence.SequenceItem;
@@ -58,6 +59,19 @@ public class GameRender extends StateRender {
             }
         }
 
+        for (ToolHit toolHit : game.getToolHits()) {
+            drawToolHit(canvas, toolHit);
+        }
+
+        paints.toolPaint.setStyle(Paint.Style.STROKE);
+        paints.toolPaint.setStrokeWidth(4);
+
+        paints.toolPaint.setColor(paints.leftActiveTargetPaint.getColor());
+        drawTool(canvas, game.getLeftTool(), paints.toolPaint);
+
+        paints.toolPaint.setColor(paints.rightActiveTargetPaint.getColor());
+        drawTool(canvas, game.getRightTool(), paints.toolPaint);
+
         canvas.restore();
 
 //        PointF leftPoint = game.getLeftPoint();
@@ -73,14 +87,6 @@ public class GameRender extends StateRender {
 //            canvas.drawCircle((float) (screenWidth * (0.5 + rightPoint.x /2)), (float) (screenWidth * (0.5 + rightPoint.y / 2)), 2.5f, panelPaint);
 //        }
 
-        paints.toolPaint.setStyle(Paint.Style.STROKE);
-        paints.toolPaint.setStrokeWidth(4);
-
-//        paints.toolPaint.setColor(paints.leftActiveTargetPaint.getColor());
-//        drawTool(canvas, game.getLeftTool(), paints.toolPaint);
-//
-//        paints.toolPaint.setColor(paints.rightActiveTargetPaint.getColor());
-//        drawTool(canvas, game.getRightTool(), paints.toolPaint);
 
         drawStickman(canvas, game.getLeftTool(), game.getRightTool());
 
@@ -204,19 +210,21 @@ public class GameRender extends StateRender {
     }
 
     private void drawTool(Canvas canvas, Tool tool, Paint paint) {
+        float boxSize = getBoxSize();
+
         PointF position = tool.getPosition();
         PointF delayed = tool.getDelayedPosition();
         PointF start = tool.getStartPoint();
         Point direction = tool.getDirection();
 
-        float pX = (float) (screenWidth * (0.5 + position.x /2));
-        float pY = (float) (screenWidth * (0.5 + position.y / 2));
+        float pX = (float) (boxSize * position.x);
+        float pY = (float) (boxSize * position.y);
 
-        float dpX = (float) (screenWidth * (0.5 + delayed.x /2));
-        float dpY = (float) (screenWidth * (0.5 + delayed.y / 2));
+        float dpX = (float) (boxSize * delayed.x);
+        float dpY = (float) (boxSize * delayed.y);
 
-        float sX = (float) (screenWidth * (0.5 + start.x /2));
-        float sY = (float) (screenWidth * (0.5 + start.y / 2));
+        float sX = (float) (boxSize * start.x);
+        float sY = (float) (boxSize * start.y);
 
 //        canvas.drawCircle(pX, pY, 10, panelPaint);
 //        canvas.drawRect(dpX - 10, dpY - 10, dpX + 10, dpY + 10, panelPaint);
@@ -224,6 +232,21 @@ public class GameRender extends StateRender {
 //        canvas.drawRect(sX - 10, sY - 10, sX + 10, sY + 10, panelPaint);
 
 //        canvas.drawLine(pX, pY, pX + direction.x * 100, pY + direction.y *100, panelPaint);
+    }
+
+    private void drawToolHit(Canvas canvas, ToolHit toolHit) {
+        float boxSize = getBoxSize();
+
+        Paint paint = paints.targetPaint;
+        paint.setStrokeWidth(2);
+        paint.setColor(ColorPalette.fade(0xffffff, (float) (1 - toolHit.getAge() / ToolHit.MAX_AGE)));
+
+        canvas.drawLine(
+                toolHit.getStartPoint().x * boxSize,
+                toolHit.getStartPoint().y * boxSize,
+                toolHit.getEndPoint().x * boxSize,
+                toolHit.getEndPoint().y * boxSize,
+                paint);
     }
 
     private float getBoxSize() {
